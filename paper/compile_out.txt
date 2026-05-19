@@ -1,0 +1,131 @@
+This is XeTeX, Version 3.141592653-2.6-0.999998 (MiKTeX 26.2) (preloaded format=xelatex.fmt)
+ restricted \write18 enabled.
+entering extended mode
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-03-20>
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/base\size12.clo))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+
+Package inputenc Warning: inputenc package ignored with utf8 based engines.
+
+) (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty))
+ (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+For additional information on amsmath, use the `?' option.
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amscls\amsthm.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\xetex.def)
+)) (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/caption\subcaption.sty)
+ (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty)
+ (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\adjustbox.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex)
+))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\adjcalc.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\trimclip.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/collectbox\collectbox.s
+ty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\tc-xetex.def)
+)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/ifoddpage\ifoddpage.sty
+) (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/varwidth\varwidth.sty
+)
+==> First Aid for varwidth.sty applied!
+) (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/siunitx\siunitx.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/placeins\placeins.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics\lscape.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/pdflscape\pdflscape.sty
+
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/pdflscape\pdflscape-nom
+etadata.sty))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
+keys.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.s
+ty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
+.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
+ty)))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettit
+lestring.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+)))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
+ty) (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+) (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+) (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc
+.sty)))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hxetex.def
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
+echeck.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquec
+ounter.sty)))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+) (C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/soul\soul.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/soul\soul-ori.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/generic/etexcmds\etexcmds.sty
+))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/subfiles\subfiles.sty
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/import\import.sty))
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/appendix\appendix.sty)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-xet
+ex.def) (main.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: xetex
+(main.out) (main.out)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd)
+(C:\Users\danie\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd)
+[1] (sections/1_intro.tex [2] [3]) (sections/2_data.tex [4] [5] [6] [7]
+[8]
+Overfull \hbox (30.46715pt too wide) in paragraph at lines 73--115
+ [][] 
+) (sections/3_methodology.tex [9] [10] [11] [12] [13]) (sections/4_results.tex
+[14] [15]
+Overfull \hbox (130.49327pt too wide) in paragraph at lines 35--66
+ [][] 
+[16] [17] [18] [19] [20] [21] [22] [23] [24]
+Overfull \hbox (45.65636pt too wide) in paragraph at lines 186--222
+ [][] 
+[25]) [26] (sections/5_conclusion.tex [27]) [28] (main.bbl [29] [30] [31])
+[32] (appendices/appendix_a_fc.tex [33] [34] [35] [36])
+(appendices/appendix_b_dec.tex [37] [38] [39] [40] [41] [42])
+(appendices/appendix_c_ci.tex [43] [44] [45] [46]) [47] (main.aux) )
+(see the transcript file for additional information)
+Output written on main.pdf (47 pages).
+Transcript written on main.log.
