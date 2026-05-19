@@ -1,5 +1,5 @@
-Vintage:       2026-05-19
-Previous end:  2024-09-30
-New end date:  2025-09-30
-Countries (28): US, SE, IT, IN, FR, CH, CA, DE, BE, NL, FI, ZA, GB, AU, JP, PT, NO, KR, HU, DK, MX, ES, ID, BR, CN, PL, CZ, RU
+Vintage:    2026-05-20
+Build:      FULL rebuild from public APIs (BIS + OECD)
+Range:      1999-03-31 to 2025-09-30
+Countries (10): BE, DE, ES, FI, FR, GB, IT, NL, PT, SE
 
