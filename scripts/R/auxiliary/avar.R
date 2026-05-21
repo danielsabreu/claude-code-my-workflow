@@ -1,76 +1,119 @@
 # avar.R — Asymptotic confidence intervals for the PCA factor
 #
-# Implements the asymptotic result of Bai (2003, Theorem 3):
-#   sqrt(N) * (F_hat_t - H * F_t^0)  ->  N(0, Avar(F_hat_t))
-#   Avar(F_hat_t) = V_NT^{-2} * Gamma_t
+# Implements Zhang (ch. 3, eq. 3.2.3 and 3.2.5) / Bai (2003):
 #
-# Gamma_t uses estimator (a) from Bai (2003) / Zhang (ch.3, eq. 3.2.5):
-#   Gamma_hat_t = (1/N) * sum_i  e_hat_it^2 * lambda_hat_i^2
+#   sqrt(N) * (f_hat_t - H' * f_t^0)  ->  N(0, V^{-1} Q Gamma_t Q' V^{-1})
 #
-# This estimator is consistent when idiosyncratic errors are cross-
-# sectionally uncorrelated but may be heteroskedastic across i and t.
-# Estimator (c) (CS-HAC) is algebraically degenerate for PCA: by the
-# first-order conditions of PCA, lambda' * (E'E/T) * lambda = 0 exactly,
-# so the CS-HAC sum collapses to zero regardless of the data.
+# where:
+#   f_hat_t   : r x 1 vector of PCA factor estimates at time t
+#   f_t^0     : r x 1 vector of true (population) common factors at time t
+#   H         : r x r rotation matrix (rotational indeterminacy of PCA)
+#   V_NT      : r x r diagonal matrix of r largest eigenvalues of (NT)^{-1} XX'
+#   V         : plim of V_NT
+#   Q         : plim_{T->inf} F_hat' F^0 / T  (r x r)
+#   Gamma_t   : lim_{N->inf} N^{-1} sum_i sum_j lambda_i^0 lambda_j^0'
+#               E(e_it e_jt)  (r x r cross-sectional covariance at time t)
+#
+# Consistent estimator of the asymptotic variance (Zhang eq. 3.2.5):
+#   Avar_hat(f_hat_t) = V_NT^{-1} * Gamma_hat_t * V_NT^{-1}
+#
+# Gamma_hat_t uses estimator (c) from Bai (2003) / Zhang (ch. 3, eq. 3.2.5):
+#   Gamma_hat_t = Gamma_hat  (time-invariant for estimator c)
+#
+#   Gamma_hat = (1/n) * sum_{i=1}^{n} sum_{j=1}^{n}
+#               lambda_hat_i * lambda_hat_j' * (1/T) * sum_{s=1}^{T} e_hat_is * e_hat_js
+#
+#   n = min(floor(sqrt(N)), floor(sqrt(T))) — cross-sectional truncation parameter.
+#   lambda_hat_i : r x 1 vector of PCA loadings for variable i
+#   e_hat_it     : x_it - lambda_hat_i' * f_hat_t  (estimated idiosyncratic component)
+#
+# Truncation to n << N is essential: summing over all N cross-sections
+# would collapse Gamma_hat to zero by the PCA first-order conditions
+# (sum_i lambda_hat_i * e_hat_it = 0 for every t). Using only the first n
+# variables avoids this degeneracy and allows for limited cross-sectional
+# dependence in the idiosyncratic errors.
+#
+# Because estimator (c) averages e_hat_is * e_hat_js over all T periods,
+# Gamma_hat does not depend on t; the resulting confidence bands have constant width.
+#
+# For r = 1, all quantities are scalars:
+#   Gamma_hat = (1/n) * (lambda_hat_{1:n}' * E_{1:n}' * E_{1:n} * lambda_hat_{1:n}) / T
+#   Avar_hat  = Gamma_hat / V_NT^2
+#
+# Implementation note (normalisation):
+#   The factor f_hat_t = v_hat' * x_t  uses a unit-norm eigenvector v_hat.
+#   This equals sqrt(N) * f_hat_t^{PC2}, where f_hat_t^{PC2} = N^{-1} Lambda_hat' x_t
+#   is Bai's PC2 factor.  The CLT (eq. 3.2.3) is for f_hat_t^{PC2}, whose SE is
+#   sqrt(Avar / N). Since f_hat_t = sqrt(N) * f_hat_t^{PC2}, SE(f_hat_t) = sqrt(Avar).
+#   Therefore the CI half-width is z_{alpha/2} * sqrt(Avar) (no extra 1/sqrt(N)).
 #
 # Output columns
 # --------------
 # factor          : PCA factor estimate (unit-norm loading convention)
-# factor.p90      : +ci_half(t)  — upper half of the time-varying neutral zone
-# factor.p10      : -ci_half(t)  — lower half of the time-varying neutral zone
-# factor.p90.mean : +mean(ci_half) — constant upper regime threshold (dashed line)
-# factor.p10.mean : -mean(ci_half) — constant lower regime threshold (dashed line)
+# factor.p90      : +ci_half  — constant upper neutral-zone boundary
+# factor.p10      : -ci_half  — constant lower neutral-zone boundary
+# factor.p90.mean : +ci_half  — constant upper regime threshold (same as p90)
+# factor.p10.mean : -ci_half  — constant lower regime threshold (same as p10)
 #
 # Bands are centred at ZERO, not at the factor estimate.
-# Interpretation: when |factor| > threshold → statistically significant deviation.
-# This matches the old code's visual convention and the regime classification logic.
+# Interpretation: |factor| > ci_half  <=>  reject H0: f_t^0 = 0 at level alpha.
 
 avar <- function(x, conf = 0.05) {
 
   obstime <- x[, 1]
   x       <- as.matrix(normalise(x[, 2:ncol(x)]))
-  T_obs   <- nrow(x)   # number of time periods
-  N       <- ncol(x)   # number of cross-sectional units (variables)
+  T_obs   <- nrow(x)   # number of time periods (T)
+  N       <- ncol(x)   # number of cross-sectional units (N)
 
   # ---- PCA -------------------------------------------------------
-  eig      <- base::eigen(cov(x), symmetric = TRUE)
-  loadings <- as.matrix(eig$vectors[, 1, drop = FALSE])  # N x 1, unit norm
-  f_hat    <- as.matrix(x %*% loadings)                  # T x 1
+  # Eigendecomposition of (NT)^{-1} X'X — exact formula per Zhang eq. 3.2.5 / Bai (2003).
+  # X'X and XX' share the same nonzero eigenvalues; the N x N form is cheaper when N < T.
+  XtX_NT   <- crossprod(x) / (N * T_obs)                # (NT)^{-1} X'X, N x N
+  eig      <- base::eigen(XtX_NT, symmetric = TRUE)
+  loadings <- as.matrix(eig$vectors[, 1, drop = FALSE])  # N x 1 unit-norm PC loading (lambda_hat)
+  f_hat    <- as.matrix(x %*% loadings)                  # T x 1 factor estimates (F_hat_t)
 
-  # ---- V_NT: Bai (2003) uses first eigenvalue of (NT)^{-1}XX' ---
-  # = first eigenvalue of X'X/(NT) = lambda_1(cov(X)) / N
-  lambda1 <- eig$values[1]   # first eigenvalue of cov(X) = X'X/(T-1)
-  V_NT    <- lambda1 / N     # Bai (2003) V_NT
+  # ---- V_NT: largest eigenvalue of (NT)^{-1} X'X ----------------
+  # Directly from the eigendecomposition above — no T/(T-1) correction needed.
+  V_NT <- eig$values[1]
 
-  # ---- Residuals: e_hat_it = X_it - lambda_hat_i * F_hat_t ------
+  # ---- Residuals: e_hat_it = x_it - lambda_hat_i' F_hat_t  (Zhang eq. 3.2.5) ----
   e <- x - f_hat %*% t(loadings)    # T x N
 
-  # ---- Gamma_hat_t (estimator a): time-varying ------------------
-  # Gamma_hat_t = (1/N) * sum_i  e_it^2 * lambda_i^2
-  lam2    <- as.numeric(loadings)^2          # N-vector of squared loadings
-  gamma_t <- apply(e, 1, function(et) sum(et^2 * lam2)) / N   # length T
+  # ---- Gamma_hat (estimator c): CS-HAC with truncation n << N ---
+  # n = min(floor(sqrt(N)), floor(sqrt(T_obs))) per Bai (2003)
+  n_cs <- min(floor(sqrt(N)), floor(sqrt(T_obs)))
+  n_cs <- max(n_cs, 1L)   # safeguard: at least 1
 
-  # ---- Asymptotic variance: Avar_hat_t = V_NT^{-2} * Gamma_hat_t
-  avar_t  <- gamma_t / V_NT^2    # = gamma_t * N^2 / lambda1^2
+  e_tr   <- e[, 1L:n_cs, drop = FALSE]           # T x n_cs: first n_cs residuals
+  lam_tr <- as.numeric(loadings[1L:n_cs])        # n_cs-vector: lambda_hat_{1:n}
 
-  # ---- CI half-width (time-varying) ------------------------------
-  # My factor F_hat = lambda' x is sqrt(N) * Bai's PC2 factor.
-  # Therefore SE(F_hat) = sqrt(N) * SE_PC2 = sqrt(Avar_hat_t)
-  # (do NOT divide by N — that would apply the PC2 CLT to the wrong scale).
-  z_alpha <- qnorm(1 - conf / 2)
-  ci_half <- z_alpha * sqrt(avar_t)         # length T
+  # (1/T) * sum_s e_is e_js  ->  n_cs x n_cs cross-product matrix
+  EE_avg <- crossprod(e_tr) / T_obs             # n_cs x n_cs
+
+  # Gamma_hat = (1/n) * lam_tr' EE_avg lam_tr   (scalar for r=1)
+  gamma_c <- as.numeric(t(lam_tr) %*% EE_avg %*% lam_tr) / n_cs
+
+  # ---- Asymptotic variance: Avar_hat = V_NT^{-2} * Gamma_hat ----
+  # (scalar form for r = 1; generalises to V_NT^{-1} Gamma V_NT^{-1})
+  avar_scalar <- gamma_c / V_NT^2
+
+  # ---- CI half-width (constant across time) ----------------------
+  # F_hat_t = lambda_hat' x_t  (unit-norm) = sqrt(N) * F_hat_t^{PC2}.
+  # CLT (Zhang eq. 3.2.3) is for F_hat_t^{PC2}; SE(PC2) = sqrt(Avar / N).
+  # SE(F_hat_t) = sqrt(N) * SE(PC2) = sqrt(Avar).  No extra 1/sqrt(N).
+  z_alpha  <- qnorm(1 - conf / 2)
+  ci_half  <- z_alpha * sqrt(avar_scalar)       # scalar: constant over t
 
   # ---- Output ----------------------------------------------------
-  # Bands are centred at 0 (neutral-zone convention, matching old code):
-  #   factor.p90 / factor.p10 : time-varying ±ci_half(t)
-  #   factor.p90.mean / .p10.mean : constant ±mean(ci_half) — regime thresholds
+  # Bands centred at 0; constant width because estimator (c) is time-invariant.
   out <- data.frame(
     obstime         = as.Date(obstime),
     factor          = as.numeric(f_hat),
-    factor.p90      =  ci_half,           # upper neutral-zone boundary (time-varying)
-    factor.p10      = -ci_half,           # lower neutral-zone boundary (time-varying)
-    factor.p90.mean =  mean(ci_half),     # constant upper regime threshold
-    factor.p10.mean = -mean(ci_half)      # constant lower regime threshold
+    factor.p90      =  ci_half,
+    factor.p10      = -ci_half,
+    factor.p90.mean =  ci_half,
+    factor.p10.mean = -ci_half
   )
   return(out)
 }
