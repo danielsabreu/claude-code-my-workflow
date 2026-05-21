@@ -29,9 +29,9 @@ Under these conditions, the PCA estimators are obtained from the eigenvalue deco
 \begin{equation}
 \hat{\boldsymbol{\Sigma}}_x = \frac{1}{T} \sum_{t=1}^{T} \boldsymbol{x}_t \boldsymbol{x}_t'
 \end{equation}
-and correspond to the eigenvectors associated with the largest $r$ eigenvalues. The estimated factors are then given by:
+Let $\hat{\boldsymbol{v}}_1, \dots, \hat{\boldsymbol{v}}_r$ denote the unit-norm eigenvectors of $\hat{\boldsymbol{\Sigma}}_x$ associated with its $r$ largest eigenvalues. The factor loadings estimator $\hat{\boldsymbol{\Lambda}}$ and the estimated factors are then given by:
 \begin{equation}
-\hat{\boldsymbol{f}}_t = N^{-1} \hat{\boldsymbol{\Lambda}}' \boldsymbol{x}_t
+\hat{\boldsymbol{\Lambda}} = \sqrt{N}\,[\hat{\boldsymbol{v}}_1, \dots, \hat{\boldsymbol{v}}_r], \qquad \hat{\boldsymbol{f}}_t = N^{-1}\hat{\boldsymbol{\Lambda}}'\boldsymbol{x}_t
 \end{equation}
 
 The consistency of the PCA estimator was established by \citet{bai2002determining} and \citet{stock2002forecasting}, while \citet{bai2003inferential} provides asymptotic distribution theory. After estimating the factors, their dynamics can be characterised by fitting a VAR model. Based on standard information criteria, we select $p = 4$.
@@ -79,41 +79,62 @@ and the system matrices $\boldsymbol{A}$ and $\boldsymbol{B}$ are given by:
 
 In large cross-sectional settings, full maximum likelihood estimation becomes computationally demanding. \citet{doz2012quasi} propose a QML approach based on a simplified state-space representation, which assumes that the factors follow a Gaussian distribution and that the idiosyncratic components are mutually orthogonal. Estimation proceeds via the Expectation-Maximisation (EM) algorithm \citep{watson1983alternative}, which alternates between a Kalman filter-based expectation step and a maximisation step based on multivariate regressions.
 
-Importantly, the estimator is consistent as both $N$ and $T$ increase, even when these distributional assumptions are relaxed, including in the presence of non-Gaussian factors and weak cross-sectional dependence in the idiosyncratic components. This robustness underpins its interpretation as a \textit{quasi}-maximum likelihood estimator.
+Importantly, the estimator is consistent as both $N$ and $T$ increase, even when these distributional assumptions are relaxed, including in the presence of non-Gaussian factors and weak cross-sectional dependence in the idiosyncratic components. This robustness motivates its interpretation as a \textit{quasi}-maximum likelihood estimator.
 
 \paragraph{Two-step estimator.}
 
-A computationally attractive alternative is the two-step estimator proposed by \citet{doz2011two}, which combines PCA and state-space methods.
+A computationally attractive alternative is the two-step estimator of \citet{doz2011two}, which avoids the iterative EM optimisation of QML by fixing all model parameters at first-step estimates.
 
-In the first step, preliminary estimates $\hat{\boldsymbol{\Lambda}}$ and $\hat{\boldsymbol{f}}_t$ are obtained via PCA, and a VAR model is fitted to the estimated factors to obtain $\hat{\boldsymbol{\Phi}}_j$. In the second step, the model is cast in state-space form assuming $\text{cov}(\boldsymbol{\eta}_t) = \boldsymbol{I}_r$ and a diagonal covariance matrix for $\boldsymbol{e}_t$, and a Kalman smoother is applied to obtain refined factor estimates:
+In the first step, PCA yields preliminary loadings $\hat{\boldsymbol{\Lambda}}$, factor estimates $\hat{\boldsymbol{f}}_t$, and residuals from which the diagonal idiosyncratic variance matrix $\hat{\boldsymbol{\Psi}} = \mathrm{diag}(\hat{\sigma}^2_{e,1}, \dots, \hat{\sigma}^2_{e,N})$ is estimated. A VAR($p$) fitted to $\hat{\boldsymbol{f}}_t$ delivers the companion matrix $\hat{\boldsymbol{A}}$ and innovation covariance $\hat{\boldsymbol{\Sigma}}_\eta$.
+
+In the second step, these first-step estimates are treated as fixed parameters and inserted into the state-space representation. The Kalman filter proceeds through a prediction--update recursion. At each $t$, the prediction step projects the factor forward using the estimated VAR:
 \begin{equation}
-\hat{\boldsymbol{f}}_{t|T} = \mathbb{E}(\boldsymbol{f}_t \mid \boldsymbol{x}_1, \dots, \boldsymbol{x}_T)
+\hat{\boldsymbol{f}}_{t|t-1} = \hat{\boldsymbol{A}}\,\hat{\boldsymbol{f}}_{t-1|t-1}
 \end{equation}
+while the update step corrects this prediction using the current observation:
+\begin{equation}
+\hat{\boldsymbol{f}}_{t|t}
+  = \hat{\boldsymbol{f}}_{t|t-1}
+    + \boldsymbol{K}_t
+      \underbrace{\!\left(\boldsymbol{x}_t
+        - \hat{\boldsymbol{\Lambda}}\hat{\boldsymbol{f}}_{t|t-1}\right)\!}
+        _{\text{prediction error}},
+\label{eq:kalman_update}
+\end{equation}
+where $\boldsymbol{K}_t$ is the Kalman gain matrix. The prediction error captures the extent to which the current observation departs from what the factor dynamics alone would imply; the gain assigns it the optimal weight relative to the model prediction. A backward smoothing pass then incorporates future observations into each estimate, delivering the full-sample smoothed factor $\hat{\boldsymbol{f}}_{t|T}$.
 
-Although the idiosyncratic components are treated as mutually orthogonal in the state-space representation, \citet{doz2011two} show that the resulting factor estimates remain consistent, as the bias induced by this misspecification vanishes asymptotically.
+The result is a factor estimate that draws simultaneously on the cross-sectional covariation in $\boldsymbol{x}_t$ and the intertemporal structure encoded in the VAR, incorporating the full sample at each $t$---all in a single non-iterative pass. Although $\hat{\boldsymbol{\Psi}}$ imposes cross-sectional orthogonality on the idiosyncratic components, \citet{doz2011two} show that the resulting estimates remain consistent, as the bias from this misspecification vanishes asymptotically.
 
 \paragraph{Asymptotic distribution and confidence bands.}
 
-To characterise the uncertainty in the estimated financial cycle, we draw on the inferential theory of \citet{bai2003inferential}. Under standard regularity conditions on the factor model and as both $N$ and $T$ tend to infinity, the PCA estimator of the common factor satisfies the following limiting distribution:
+To characterise the uncertainty in the estimated financial cycle, we draw on the inferential theory of \citet{bai2003inferential}. Let $\hat{\boldsymbol{f}}_t$ denote the $r \times 1$ vector of PCA factor estimates at time $t$, obtained as $\hat{\boldsymbol{f}}_t = N^{-1}\hat{\boldsymbol{\Lambda}}'\boldsymbol{x}_t$, and let $\boldsymbol{f}_t^0$ denote the $r \times 1$ vector of true (population) common factors at time $t$, which are unobserved. Under standard regularity conditions on the factor model and as $(N,T) \to \infty$ with $\sqrt{N}/T \to 0$, the PCA estimator satisfies \citep[eq.~3.2.3]{zhang2019factor}:
 \begin{equation}
-    \sqrt{N}\left(\hat{\boldsymbol{f}}_t - \boldsymbol{H}\boldsymbol{f}_t^0\right) \xrightarrow{d} \mathcal{N}\!\left(0,\; V_{NT}^{-2}\,\hat{\Gamma}_t\right),
+    \sqrt{N}\left(\hat{\boldsymbol{f}}_t - \boldsymbol{H}'\boldsymbol{f}_t^0\right) \xrightarrow{d} \mathcal{N}\!\left(\boldsymbol{0},\; \boldsymbol{V}^{-1}\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'\boldsymbol{V}^{-1}\right),
     \label{eq:factor_clt}
 \end{equation}
-where $\boldsymbol{H}$ is an asymptotically invertible rotation matrix, $V_{NT}$ denotes the first eigenvalue of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, and $\Gamma_t$ is the asymptotic variance of the cross-sectional average of the weighted idiosyncratic components. A consistent estimator of the asymptotic variance is given by \citep{bai2003inferential,zhang2019factor}:
+where:
+\begin{itemize}
+  \item[(i)] $\boldsymbol{H} = \boldsymbol{V}_{NT}^{-1}(\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T)(\boldsymbol{\Lambda}^{0'}\boldsymbol{\Lambda}^0/N)$ is an asymptotically invertible $r \times r$ rotation matrix arising from the rotational indeterminacy of PCA, where $\hat{\boldsymbol{F}} = (\hat{\boldsymbol{f}}_1,\ldots,\hat{\boldsymbol{f}}_T)'$ is the $T \times r$ matrix of PCA estimated factors, $\boldsymbol{F}^0 = (\boldsymbol{f}_1^0,\ldots,\boldsymbol{f}_T^0)'$ is the $T \times r$ matrix of true factors, and $\boldsymbol{\Lambda}^0 = (\boldsymbol{\lambda}_1^0,\ldots,\boldsymbol{\lambda}_N^0)'$ is the $N \times r$ matrix of true factor loadings, with $\boldsymbol{\lambda}_i^0$ denoting the $r \times 1$ vector of true loadings for variable $i$;
+  \item[(ii)] $\boldsymbol{V}_{NT}$ is the $r \times r$ diagonal matrix whose entries are the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$ in decreasing order, where $\boldsymbol{X}$ is the $T \times N$ data matrix, and $\boldsymbol{V} = \mathrm{plim}\,\boldsymbol{V}_{NT}$ is its probability limit;
+  \item[(iii)] $\boldsymbol{Q} = \mathrm{plim}_{T\to\infty}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$ is an $r \times r$ probability limit matrix; and
+  \item[(iv)] $\boldsymbol{\Gamma}_t = \lim_{N\to\infty} N^{-1}\sum_{i=1}^{N}\sum_{j=1}^{N}\boldsymbol{\lambda}_i^0\boldsymbol{\lambda}_j^{0'} E(e_{it}e_{jt})$ is an $r \times r$ matrix capturing the cross-sectional covariance structure of the idiosyncratic components $e_{it}$ at time $t$.
+\end{itemize}
+
+Following \citet{zhang2019factor}, a consistent estimator of the asymptotic variance is \citep[eq.~3.2.5]{zhang2019factor}:
 \begin{equation}
-    \widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t) = V_{NT}^{-2}\,\hat{\Gamma}_t,
+    \widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t) = \boldsymbol{V}_{NT}^{-1}\,\hat{\boldsymbol{\Gamma}}_t\,\boldsymbol{V}_{NT}^{-1},
     \label{eq:avar}
 \end{equation}
-where $\hat{\Gamma}_t$ is estimated as:
+where $\hat{\boldsymbol{\Gamma}}_t$ is a consistent estimator of $\boldsymbol{\Gamma}_t$. We adopt estimator (c) of \citet{bai2003inferential}, the cross-sectional heteroskedasticity and autocorrelation consistent (CS-HAC) estimator:
 \begin{equation}
-    \hat{\Gamma}_t = \frac{1}{N}\sum_{i=1}^{N} \hat{e}_{it}^2\,\hat{\lambda}_i^2,
+    \hat{\boldsymbol{\Gamma}}_t \;=\; \hat{\boldsymbol{\Gamma}} \;=\; \frac{1}{n}\sum_{i=1}^{n}\sum_{j=1}^{n} \hat{\boldsymbol{\lambda}}_i\hat{\boldsymbol{\lambda}}_j'\,\frac{1}{T}\sum_{s=1}^{T} \hat{e}_{is}\hat{e}_{js},
     \label{eq:gamma_est}
 \end{equation}
-with $\hat{e}_{it} = x_{it} - \hat{\lambda}_i\hat{f}_t$ denoting the estimated idiosyncratic component and $\hat{\lambda}_i$ the PCA loading of variable $i$. This estimator is consistent under the assumption that the idiosyncratic errors are cross-sectionally uncorrelated but may exhibit heteroskedasticity across both variables and time.\footnote{Cross-sectionally and heteroskedastically autocorrelation consistent (CS-HAC) estimators of $\Gamma_t$, which allow for cross-sectional dependence in $e_{it}$, are algebraically degenerate in the PCA setting: by the first-order conditions of the PCA objective, the estimated loadings $\hat{\boldsymbol{\lambda}}$ are orthogonal to the residuals $\hat{\boldsymbol{e}}_t$, so the full CS-HAC sum collapses to zero identically.}
+where $\hat{e}_{it} = x_{it} - \hat{\boldsymbol{\lambda}}_i'\hat{\boldsymbol{f}}_t$ is the estimated idiosyncratic component for variable $i$ at time $t$, $\hat{\boldsymbol{\lambda}}_i$ is the $r \times 1$ vector of PCA factor loadings for variable $i$, and $n = \min\!\bigl\{\lfloor N^{1/2}\rfloor,\lfloor T^{1/2}\rfloor\bigr\}$ is the cross-sectional truncation parameter recommended by \citet{bai2003inferential}. Because estimator (c) averages the idiosyncratic cross-products $\hat{e}_{is}\hat{e}_{js}$ over all $T$ periods, $\hat{\boldsymbol{\Gamma}}$ does not depend on $t$; hence we write $\hat{\boldsymbol{\Gamma}}_t = \hat{\boldsymbol{\Gamma}}$, and the resulting confidence bands have constant width across the sample. The truncation to $n \ll N$ is essential: summing over all $N$ cross-sections would collapse $\hat{\boldsymbol{\Gamma}}$ to zero by the PCA first-order conditions, which impose $\sum_{i=1}^{N}\hat{\boldsymbol{\lambda}}_i\hat{e}_{it} = \boldsymbol{0}$ for every $t$.
 
-An $(1-\alpha)$ confidence interval for $\boldsymbol{H}\boldsymbol{f}_t^0$ at each $t$ is then:
+A $(1-\alpha)$ confidence interval for the $k$-th element of the rotated true factor vector $[\boldsymbol{H}'\boldsymbol{f}_t^0]_k$ is:
 \begin{equation}
-    \hat{f}_t \;\pm\; z_{\alpha/2}\,\sqrt{\widehat{\mathrm{Avar}}(\hat{f}_t)} \;=\; \hat{f}_t \;\pm\; z_{\alpha/2}\,\frac{N\sqrt{\hat{\Gamma}_t}}{\lambda_1},
+    \hat{f}_{k,t} \;\pm\; z_{\alpha/2}\sqrt{\bigl[\widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t)\bigr]_{kk}},
     \label{eq:ci}
 \end{equation}
-where $\lambda_1 = N\,V_{NT}$ is the first eigenvalue of the sample covariance matrix of the data and $z_{\alpha/2}$ is the corresponding normal quantile.\footnote{The factor estimator used in practice is $\hat{f}_t = \hat{\boldsymbol{\lambda}}'\boldsymbol{x}_t$, where $\hat{\boldsymbol{\lambda}}$ is the unit-norm PCA eigenvector. This differs from the PC2-normalised factor in \citet{bai2003inferential} by a factor of $\sqrt{N}$, so its asymptotic standard error is $\sqrt{N}$ times larger: $\mathrm{SE}(\hat{f}_t) = \sqrt{\widehat{\mathrm{Avar}}(\hat{f}_t)}$ without the additional $1/\sqrt{N}$ correction.} We construct 95\% confidence bands ($\alpha = 0.05$, $z_{0.025} \approx 1.96$). The bands are centred on the financial cycle indicator at each point in time. Periods in which the indicator lies within the confidence band are classified as \textit{neutral}: the factor is not significantly different from its long-run average of zero at the 5\% significance level. Since $\hat{\Gamma}_t$ varies over time through the squared residuals $\hat{e}_{it}^2$, the bands widen during periods of large idiosyncratic variation and tighten when the common factor explains a greater share of cross-sectional variation. The mean of the upper and lower bounds provides a pair of constant dashed-line thresholds used for the regime classification throughout the paper.
+where $\hat{f}_{k,t}$ is the $k$-th element of $\hat{\boldsymbol{f}}_t$, $[\,\cdot\,]_{kk}$ denotes the $(k,k)$ diagonal entry, and $z_{\alpha/2}$ is the $(1 - \alpha/2)$ quantile of the standard normal distribution.\footnote{The factor estimator $\hat{\boldsymbol{f}}_t = N^{-1}\hat{\boldsymbol{\Lambda}}'\boldsymbol{x}_t$ satisfies $N^{-1}\hat{\boldsymbol{\Lambda}}'\hat{\boldsymbol{\Lambda}} = \boldsymbol{I}_r$ (PC2 normalisation). In the implementation, the first PCA eigenvector $\hat{\boldsymbol{v}}^{(1)}$ is unit-norm, so $\hat{f}_t = \hat{\boldsymbol{v}}^{(1)'}\boldsymbol{x}_t = \sqrt{N}\cdot\hat{f}_t^{PC2}$. The CLT~\eqref{eq:factor_clt} is stated for the PC2 factor $\hat{f}_t^{PC2}$, whose standard error is $\sqrt{[\widehat{\mathrm{Avar}}]_{kk}/N}$. Since $\hat{f}_t = \sqrt{N}\,\hat{f}_t^{PC2}$, its standard error is $\mathrm{SE}(\hat{f}_t) = \sqrt{[\widehat{\mathrm{Avar}}]_{kk}}$, and the interval~\eqref{eq:ci} applies directly without an additional $\sqrt{N}$ adjustment.} We construct 95\% confidence bands ($\alpha = 0.05$, $z_{0.025} \approx 1.96$). The empirical implementation and the regime classification based on these bands are developed in Section~\ref{Results}.
