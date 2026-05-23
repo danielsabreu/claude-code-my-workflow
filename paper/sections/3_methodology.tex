@@ -107,28 +107,14 @@ The result is a factor estimate that draws simultaneously on the cross-sectional
 
 \paragraph{Asymptotic inference.}
 
-Factor estimates carry estimation uncertainty that must be quantified for inference on the financial cycle. Under the rate condition $\sqrt{N}/T\to 0$ — which ensures that loading estimation error is asymptotically negligible relative to time-series variation — \citet{bai2003inferential} establishes that, as $(N,T)\to\infty$:
+Factor estimates carry estimation uncertainty that must be quantified for inference on the financial cycle. Under the rate condition $\sqrt{N}/T\to 0$, \citet{bai2003inferential} establishes that, as $(N,T)\to\infty$:
 \begin{equation}
     \sqrt{N}\left(\hat{\boldsymbol{f}}_t - \boldsymbol{H}'\boldsymbol{f}_t^0\right) \xrightarrow{d} \mathcal{N}\!\left(\boldsymbol{0},\; \boldsymbol{V}^{-1}\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'\boldsymbol{V}^{-1}\right),
     \label{eq:factor_clt}
 \end{equation}
-where $\boldsymbol{f}_t^0$ denotes the true factors, $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymbol{V}=\operatorname{plim}\boldsymbol{V}_{NT}$ is the limit of the diagonal matrix of the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, $\boldsymbol{Q}=\operatorname{plim}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$, and $\boldsymbol{\Gamma}_t = \lim_{N\to\infty}N^{-1}\sum_{i,j}\lambda_i^0\lambda_j^{0\prime}\,\mathbb{E}(e_{it}e_{jt})$ captures the cross-sectional covariance of the idiosyncratic components at time $t$.
-
-The feasible asymptotic variance (Avar) estimator for $\boldsymbol{V}^{-1}\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'\boldsymbol{V}^{-1}$, proposed by \citet{bai2003inferential}, replaces each population quantity with its sample analogue:
-\begin{equation}
-    \widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t) = \boldsymbol{V}_{NT}^{-1}\,\hat{\boldsymbol{\Gamma}}_t\,\boldsymbol{V}_{NT}^{-1},
-    \label{eq:avar_hat}
-\end{equation}
-where $\boldsymbol{V}_{NT}$ is the $r\!\times\!r$ diagonal matrix whose entries are the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, arranged in decreasing order — the direct sample analogue of $\boldsymbol{V} = \operatorname{plim}\boldsymbol{V}_{NT}$. Under the normalisation $N^{-1}\hat{\boldsymbol{\Lambda}}'\hat{\boldsymbol{\Lambda}}=\boldsymbol{I}_r$, each diagonal entry equals the share of normalised panel variance $(NT)^{-1}\|\boldsymbol{X}\|_F^2$ explained by the corresponding factor, so that $\boldsymbol{V}_{NT}$ measures \emph{factor signal strength}: larger eigenvalues indicate factors more strongly identified from the cross-section. The sandwich $\boldsymbol{V}_{NT}^{-1}(\cdot)\boldsymbol{V}_{NT}^{-1}$ in \eqref{eq:avar_hat} inflates the estimated variance in inverse proportion to signal strength, yielding appropriately wider bands for more weakly identified factors. $\hat{\boldsymbol{\Gamma}}_t$ consistently estimates $\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'$; we use the cross-section heteroskedasticity- and autocorrelation-consistent (CS-HAC) estimator \citep{bai2003inferential}:
-\begin{equation}
-    \hat{\boldsymbol{\Gamma}} = \frac{1}{n}\sum_{i=1}^{n}\sum_{j=1}^{n}\hat{\boldsymbol{\lambda}}_i\hat{\boldsymbol{\lambda}}_j'\,\frac{1}{T}\sum_{t=1}^{T}\hat{e}_{it}\hat{e}_{jt},
-    \label{eq:gamma_est}
-\end{equation}
-where $\hat{e}_{it} = x_{it} - \hat{\boldsymbol{\lambda}}_i'\hat{\boldsymbol{f}}_t$. This estimator accommodates cross-sectional correlation and heteroskedasticity in the idiosyncratic errors — it does not require $e_{it}$ and $e_{jt}$ to be uncorrelated across units, nor imposes a common error variance — but does require cross-sectional covariance stationarity: $E(e_{it}e_{jt}) = \sigma_{ij}$ for all $t$ \citep{bai2003inferential}. In our application this is a natural assumption, since the financial variables share a common sample period and the cross-sectional dependence structure between country-level series is unlikely to shift systematically over time. The double sum is truncated to $n = \min\!\bigl\{\lfloor N^{1/2}\rfloor,\lfloor T^{1/2}\rfloor\bigr\}$ pairs, so that $n/\min[N,T]\to 0$ as suggested by \citet{bai2003inferential}. Because $\hat{\boldsymbol{\Gamma}}$ averages cross-products over all $T$ periods it does not depend on $t$, and the resulting confidence bands have constant width over time.
-
-Pointwise $(1-\alpha)$ confidence bands for the $k$-th factor are:
+where $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymbol{V}$ is the probability limit of the diagonal matrix of the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, $\boldsymbol{Q}=\operatorname{plim}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$, and $\boldsymbol{\Gamma}_t$ captures the cross-sectional covariance of the idiosyncratic components at time $t$. We construct a feasible asymptotic variance estimate by replacing population quantities with sample analogues, using the cross-section heteroskedasticity- and autocorrelation-consistent (CS-HAC) estimator of \citet{bai2003inferential} to account for cross-sectional correlation and heteroskedasticity in the idiosyncratic errors. Pointwise $(1-\alpha)$ confidence bands for the $k$-th factor are then:
 \begin{equation}
     \hat{f}_{k,t} \pm z_{\alpha/2}\left[\frac{\widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t)_{kk}}{N}\right]^{1/2},
     \label{eq:ci_factor}
 \end{equation}
-where $z_{\alpha/2}$ is the upper $\alpha/2$ quantile of the standard normal distribution; for $95\%$ bands ($\alpha=0.05$), $z_{\alpha/2} = 1.96$. The bands are centred at zero rather than at the factor estimate: they demarcate the region in which the true factor cannot be distinguished from zero at the $\alpha$ level, providing a natural threshold for identifying periods of statistically significant financial cycle activity.
+where $z_{\alpha/2}$ is the upper $\alpha/2$ quantile of the standard normal. The bands are centred at zero: they demarcate the region in which the true factor cannot be distinguished from zero at the $\alpha$ level, providing a natural threshold for identifying periods of statistically significant financial cycle activity.
