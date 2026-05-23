@@ -275,11 +275,24 @@ oos_graph <- df_oos %>%
     pca_q75    = quantile(pca, 0.75, na.rm = TRUE)
   )
 
+recession_date <- as.Date("2008-06-30")   # Euro area recession: Q2 2008
+lehman_date    <- as.Date("2008-09-15")   # Lehman Brothers failure: 15 Sep 2008
+
 p_oos <- ggplot(oos_graph, aes(x = quarter)) +
   geom_ribbon(aes(ymin = pca_q25, ymax = pca_q75),
               fill = COLOURS$ribbon, alpha = 0.6) +
   geom_line(aes(y = pca_median), colour = COLOURS$pca, linewidth = 0.8) +
   geom_hline(yintercept = 0, colour = "grey40", linewidth = 0.3) +
+  geom_vline(xintercept = recession_date, linetype = "dashed",
+             colour = "grey40", linewidth = 0.5) +
+  geom_vline(xintercept = lehman_date, linetype = "dashed",
+             colour = "grey40", linewidth = 0.5) +
+  annotate("text", x = recession_date, y = Inf,
+           label = "Euro area\nrecession", hjust = 1.05, vjust = 1.3,
+           size = 3.2, colour = "grey30") +
+  annotate("text", x = lehman_date, y = Inf,
+           label = "Lehman\nBrothers", hjust = -0.05, vjust = 1.3,
+           size = 3.2, colour = "grey30") +
   scale_x_date(
     breaks = as.Date(c("2006-03-31","2007-03-31","2008-03-31","2009-03-31")),
     labels = c("2006 Q1","2007 Q1","2008 Q1","2009 Q1")
