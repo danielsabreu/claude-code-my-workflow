@@ -415,6 +415,8 @@ class QualityScorer:
 
         # Check broken citations (LaTeX-style \cite patterns)
         bib_file = self.filepath.parent.parent / 'Bibliography_base.bib'
+        if not bib_file.exists():
+            bib_file = self.filepath.parent.parent / 'refs' / 'references.bib'
         broken_citations = IssueDetector.check_broken_citations(content, bib_file)
 
         # Also check Quarto-style @key citations
@@ -513,6 +515,8 @@ class QualityScorer:
         # Check for undefined/broken citations (\cite, \citep, \citet patterns)
         bib_file = self.filepath.parent.parent / 'Bibliography_base.bib'
         if not bib_file.exists():
+            bib_file = self.filepath.parent.parent / 'refs' / 'references.bib'
+        if not bib_file.exists():
             # Also check same directory
             bib_file = self.filepath.parent / 'Bibliography_base.bib'
         broken_citations = IssueDetector.check_broken_citations(content, bib_file)
@@ -525,27 +529,30 @@ class QualityScorer:
             })
             self.score -= 15
 
-        # Check for lines likely to cause overfull hbox
-        overfull_lines = IssueDetector.check_overfull_hbox_risk(content)
-        for line in overfull_lines:
-            self.issues['critical'].append({
-                'type': 'overfull_hbox',
-                'description': f'Potential overfull hbox at line {line}',
-                'details': 'Line >120 chars inside frame may overflow slide width',
-                'points': 10
-            })
-            self.score -= 10
+        # Overflow checks only apply to Beamer slides, not paper sections
+        is_beamer = r'\begin{frame}' in content
+        if is_beamer:
+            # Check for lines likely to cause overfull hbox
+            overfull_lines = IssueDetector.check_overfull_hbox_risk(content)
+            for line in overfull_lines:
+                self.issues['critical'].append({
+                    'type': 'overfull_hbox',
+                    'description': f'Potential overfull hbox at line {line}',
+                    'details': 'Line >120 chars inside frame may overflow slide width',
+                    'points': 10
+                })
+                self.score -= 10
 
-        # Check equation overflow (same heuristic as Quarto)
-        equation_overflows = IssueDetector.check_equation_overflow(content)
-        for line_num in equation_overflows:
-            self.issues['critical'].append({
-                'type': 'overfull_hbox',
-                'description': f'Potential equation overflow at line {line_num}',
-                'details': 'Single equation line >120 chars likely to overflow',
-                'points': 10
-            })
-            self.score -= 10
+            # Check equation overflow (same heuristic as Quarto)
+            equation_overflows = IssueDetector.check_equation_overflow(content)
+            for line_num in equation_overflows:
+                self.issues['critical'].append({
+                    'type': 'overfull_hbox',
+                    'description': f'Potential equation overflow at line {line_num}',
+                    'details': 'Single equation line >120 chars likely to overflow',
+                    'points': 10
+                })
+                self.score -= 10
 
         self.score = max(0, self.score)
         return self._generate_report()
