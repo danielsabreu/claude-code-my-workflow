@@ -40,22 +40,25 @@ THRESHOLD_CRITICAL = 90
 THROTTLE_INTERVAL = 60
 
 
-def get_session_dir() -> Path:
-    """Get the session directory for storing cache files."""
+def get_cache_file(session_id: str = "") -> Path:
+    """Get the per-session cache file path."""
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", "")
-    if not project_dir:
-        return Path.home() / ".claude" / "sessions" / "default"
-
     import hashlib
-    project_hash = hashlib.md5(project_dir.encode()).hexdigest()[:8]
+    if project_dir:
+        project_hash = hashlib.md5(project_dir.encode()).hexdigest()[:8]
+    else:
+        project_hash = "default"
     session_dir = Path.home() / ".claude" / "sessions" / project_hash
     session_dir.mkdir(parents=True, exist_ok=True)
-    return session_dir
+    # Use session_id suffix so each session has its own counter.
+    # Falls back to the shared file only when no session_id is available.
+    suffix = f"-{session_id[:16]}" if session_id else ""
+    return session_dir / f"context-monitor-cache{suffix}.json"
 
 
-def read_cache() -> dict:
+def read_cache(session_id: str = "") -> dict:
     """Read the context monitor cache."""
-    cache_file = get_session_dir() / "context-monitor-cache.json"
+    cache_file = get_cache_file(session_id)
     if not cache_file.exists():
         return {}
     try:
@@ -64,42 +67,41 @@ def read_cache() -> dict:
         return {}
 
 
-def save_cache(data: dict) -> None:
+def save_cache(data: dict, session_id: str = "") -> None:
     """Save the context monitor cache."""
-    cache_file = get_session_dir() / "context-monitor-cache.json"
+    cache_file = get_cache_file(session_id)
     try:
         cache_file.write_text(json.dumps(data, indent=2))
     except IOError:
         pass
 
 
-def estimate_context_percentage() -> float:
+def estimate_context_percentage(session_id: str = "") -> float:
     """
     Estimate context usage as a percentage.
 
-    This is a heuristic since we don't have direct access to Claude's context
-    window. We use the tool call count as a proxy.
+    Uses per-session tool call count as a proxy. Resets automatically
+    for each new session_id, preventing cross-session contamination.
 
     Returns a value from 0-100 representing estimated context usage.
     """
-    cache = read_cache()
+    cache = read_cache(session_id)
 
     # Increment tool call counter
     tool_calls = cache.get("tool_calls", 0) + 1
     cache["tool_calls"] = tool_calls
-    save_cache(cache)
+    save_cache(cache, session_id)
 
     # Heuristic: assume ~200 tool calls fills context (very rough estimate)
-    # This is intentionally conservative to trigger warnings early
-    MAX_TOOL_CALLS = 150
+    MAX_TOOL_CALLS = 200
 
     percentage = min((tool_calls / MAX_TOOL_CALLS) * 100, 100)
     return percentage
 
 
-def is_throttled(percentage: float) -> bool:
+def is_throttled(percentage: float, session_id: str = "") -> bool:
     """Check if we should skip this check due to throttling."""
-    cache = read_cache()
+    cache = read_cache(session_id)
     last_check = cache.get("last_check_time", 0)
     now = time.time()
 
@@ -109,13 +111,13 @@ def is_throttled(percentage: float) -> bool:
 
     # Update last check time
     cache["last_check_time"] = now
-    save_cache(cache)
+    save_cache(cache, session_id)
     return False
 
 
-def get_shown_thresholds() -> dict:
+def get_shown_thresholds(session_id: str = "") -> dict:
     """Get which thresholds have already been shown in this session."""
-    cache = read_cache()
+    cache = read_cache(session_id)
     return {
         "learn": cache.get("shown_learn", []),
         "warn_80": cache.get("shown_warn_80", False),
@@ -123,9 +125,9 @@ def get_shown_thresholds() -> dict:
     }
 
 
-def mark_threshold_shown(threshold_type: str, value: int | bool = True) -> None:
+def mark_threshold_shown(threshold_type: str, value: int | bool = True, session_id: str = "") -> None:
     """Mark a threshold as shown."""
-    cache = read_cache()
+    cache = read_cache(session_id)
     if threshold_type == "learn":
         shown = cache.get("shown_learn", [])
         if value not in shown:
@@ -133,7 +135,7 @@ def mark_threshold_shown(threshold_type: str, value: int | bool = True) -> None:
         cache["shown_learn"] = shown
     else:
         cache[f"shown_{threshold_type}"] = value
-    save_cache(cache)
+    save_cache(cache, session_id)
 
 
 def format_learn_reminder(percentage: float, threshold: int) -> str:
@@ -181,32 +183,34 @@ def run_context_monitor() -> int:
     except (json.JSONDecodeError, IOError):
         hook_input = {}
 
+    session_id = hook_input.get("session_id", "")
+
     # Estimate current context usage
-    percentage = estimate_context_percentage()
+    percentage = estimate_context_percentage(session_id)
 
     # Check throttling
-    if is_throttled(percentage):
+    if is_throttled(percentage, session_id):
         return 0
 
-    shown = get_shown_thresholds()
+    shown = get_shown_thresholds(session_id)
 
     # Check /learn thresholds (40%, 55%, 65%)
     for threshold in LEARN_THRESHOLDS:
         if percentage >= threshold and threshold not in shown["learn"]:
             print(format_learn_reminder(percentage, threshold))
-            mark_threshold_shown("learn", threshold)
+            mark_threshold_shown("learn", threshold, session_id)
             return 0  # Only show one message at a time
 
     # Check 90% threshold (critical)
     if percentage >= THRESHOLD_CRITICAL and not shown["warn_90"]:
         print(format_warn_90(percentage))
-        mark_threshold_shown("warn_90", True)
+        mark_threshold_shown("warn_90", True, session_id)
         return 0  # Non-blocking warning (exit 2 would block Claude)
 
     # Check 80% threshold (info)
     if percentage >= THRESHOLD_WARN and not shown["warn_80"]:
         print(format_warn_80(percentage))
-        mark_threshold_shown("warn_80", True)
+        mark_threshold_shown("warn_80", True, session_id)
         return 0
 
     return 0
