@@ -23,7 +23,7 @@ PCA is a nonparametric approach, as it does not require specifying a model for t
 SSR(\boldsymbol{\Lambda}, \boldsymbol{f}_t) = \frac{1}{NT} \sum_{t=1}^{T} (\boldsymbol{x}_t - \boldsymbol{\Lambda} \boldsymbol{f}_t)' (\boldsymbol{x}_t - \boldsymbol{\Lambda} \boldsymbol{f}_t)
 \end{equation}
 
-Due to the indeterminacy of the factors and loadings, identification requires normalisation.\footnote{This reflects the fact that both the factors and loadings are unobserved and only their product is identified. To illustrate the identification issue, consider any invertible $r \times r$ matrix $\boldsymbol{Q}$. Then, the common component $\boldsymbol{\Lambda} \boldsymbol{f}_t$ is observationally equivalent to $\boldsymbol{\Lambda}^* \boldsymbol{f}_t^* = (\boldsymbol{\Lambda} \boldsymbol{Q}^{-1})(\boldsymbol{Q} \boldsymbol{f}_t)$, where $\boldsymbol{\Lambda}^* = \boldsymbol{\Lambda} \boldsymbol{Q}^{-1}$ and $\boldsymbol{f}_t^* = \boldsymbol{Q} \boldsymbol{f}_t$.} A convenient normalisation imposes $N^{-1}\boldsymbol{\Lambda}'\boldsymbol{\Lambda} = \boldsymbol{I}_r$ and assumes that $\mathbb{E}(\boldsymbol{f}_t \boldsymbol{f}_t')$ is diagonal.
+Due to the indeterminacy of the factors and loadings, identification requires normalisation.\footnote{This reflects the fact that both the factors and loadings are unobserved and only their product is identified. To illustrate the identification issue, consider any invertible $r \times r$ matrix $\boldsymbol{M}$. Then, the common component $\boldsymbol{\Lambda} \boldsymbol{f}_t$ is observationally equivalent to $\boldsymbol{\Lambda}^* \boldsymbol{f}_t^* = (\boldsymbol{\Lambda} \boldsymbol{M}^{-1})(\boldsymbol{M} \boldsymbol{f}_t)$, where $\boldsymbol{\Lambda}^* = \boldsymbol{\Lambda} \boldsymbol{M}^{-1}$ and $\boldsymbol{f}_t^* = \boldsymbol{M} \boldsymbol{f}_t$.} A convenient normalisation imposes $N^{-1}\boldsymbol{\Lambda}'\boldsymbol{\Lambda} = \boldsymbol{I}_r$ and assumes that $\mathbb{E}(\boldsymbol{f}_t \boldsymbol{f}_t')$ is diagonal.
 
 Under these conditions, the PCA estimators are obtained from the eigenvalue decomposition of the sample covariance matrix:
 \begin{equation}
@@ -87,11 +87,11 @@ A computationally attractive alternative is the two-step estimator of \citet{doz
 
 In the first step, PCA yields preliminary loadings $\hat{\boldsymbol{\Lambda}}$, factor estimates $\hat{\boldsymbol{f}}_t$, and residuals from which the diagonal idiosyncratic variance matrix $\hat{\boldsymbol{\Psi}} = \mathrm{diag}(\hat{\sigma}^2_{e,1}, \dots, \hat{\sigma}^2_{e,N})$ is estimated. A VAR($p$) fitted to $\hat{\boldsymbol{f}}_t$ delivers the companion matrix $\hat{\boldsymbol{A}}$ and innovation covariance $\hat{\boldsymbol{\Sigma}}_\eta$.
 
-In the second step, these first-step estimates are treated as fixed parameters and inserted into the state-space representation. The Kalman filter proceeds through a prediction--update recursion. At each $t$, the prediction step projects the factor forward using the estimated VAR:
+In the second step, these first-step estimates are treated as fixed parameters and inserted into the state-space representation. The Kalman filter proceeds through a prediction--update recursion, operating on the $rp \times 1$ companion state $\hat{\boldsymbol{F}}_t = [\hat{\boldsymbol{f}}_t', \dots, \hat{\boldsymbol{f}}_{t-p+1}']'$. At each $t$, the prediction step advances the full state using the estimated VAR:
 \begin{equation}
-\hat{\boldsymbol{f}}_{t|t-1} = \hat{\boldsymbol{A}}\,\hat{\boldsymbol{f}}_{t-1|t-1}
+\hat{\boldsymbol{F}}_{t|t-1} = \hat{\boldsymbol{A}}\,\hat{\boldsymbol{F}}_{t-1|t-1}
 \end{equation}
-while the update step corrects this prediction using the current observation:
+while the update step corrects the current-period factor block $\hat{\boldsymbol{f}}_{t|t-1}$ using the current observation:
 \begin{equation}
 \hat{\boldsymbol{f}}_{t|t}
   = \hat{\boldsymbol{f}}_{t|t-1}
@@ -112,7 +112,7 @@ Factor estimates carry estimation uncertainty that must be quantified for infere
     \sqrt{N}\left(\hat{\boldsymbol{f}}_t - \boldsymbol{H}'\boldsymbol{f}_t^0\right) \xrightarrow{d} \mathcal{N}\!\left(\boldsymbol{0},\; \boldsymbol{V}^{-1}\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'\boldsymbol{V}^{-1}\right),
     \label{eq:factor_clt}
 \end{equation}
-where $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymbol{V}$ is the probability limit of the diagonal matrix of the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, $\boldsymbol{Q}=\operatorname{plim}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$, and $\boldsymbol{\Gamma}_t$ captures the cross-sectional covariance of the idiosyncratic components at time $t$. A feasible asymptotic variance estimate replaces each population quantity with its sample analogue. The estimator of $\boldsymbol{\Gamma}_t$ accounts for cross-sectional correlation and heteroskedasticity in the idiosyncratic errors:
+where $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymbol{V}$ is the probability limit of the diagonal matrix of the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, $\boldsymbol{Q}=\operatorname{plim}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$, and $\boldsymbol{\Gamma}_t$ captures the cross-sectional covariance of the idiosyncratic components at time $t$. A feasible estimator replaces $\boldsymbol{V}$ with its sample analogue $\hat{\boldsymbol{V}}$ and estimates the rotated sandwich $\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'$ as a single unit via $\hat{\boldsymbol{\Gamma}}_t$. The estimator $\hat{\boldsymbol{\Gamma}}_t$ accounts for cross-sectional correlation and heteroskedasticity in the idiosyncratic errors:
 \begin{equation}
     \hat{\boldsymbol{\Gamma}}_t = \frac{1}{N}\hat{\boldsymbol{\Lambda}}'\hat{\boldsymbol{e}}_t\hat{\boldsymbol{e}}_t'\hat{\boldsymbol{\Lambda}},
     \label{eq:gamma_hat}
@@ -122,7 +122,7 @@ where $\hat{\boldsymbol{e}}_t = \boldsymbol{x}_t - \hat{\boldsymbol{\Lambda}}\ha
     \widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t) = \hat{\boldsymbol{V}}^{-1}\hat{\boldsymbol{\Gamma}}_t\hat{\boldsymbol{V}}^{-1},
     \label{eq:avar_hat}
 \end{equation}
-where $\hat{\boldsymbol{V}}$ replaces $\boldsymbol{V}$ with its sample analogue. $(1-\alpha)$ confidence bands for the $k$-th factor are then:
+$(1-\alpha)$ confidence bands for the $k$-th factor are then:
 \begin{equation}
     \hat{f}_{k,t} \pm z_{\alpha/2}\left[\frac{\widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t)_{kk}}{N}\right]^{1/2},
     \label{eq:ci_factor}
