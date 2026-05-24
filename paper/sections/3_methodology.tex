@@ -119,10 +119,10 @@ where $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymb
 \end{equation}
 where $\hat{\boldsymbol{e}}_t = \boldsymbol{x}_t - \hat{\boldsymbol{\Lambda}}\hat{\boldsymbol{f}}_t$ are the estimated idiosyncratic residuals at time $t$. The feasible asymptotic variance estimator \citep{bai2003inferential} is then:
 \begin{equation}
-    \widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t) = \hat{\boldsymbol{V}}^{-1}\hat{\boldsymbol{Q}}\,\hat{\boldsymbol{\Gamma}}_t\,\hat{\boldsymbol{Q}}'\hat{\boldsymbol{V}}^{-1},
+    \widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t) = \hat{\boldsymbol{V}}^{-1}\hat{\boldsymbol{\Gamma}}_t\hat{\boldsymbol{V}}^{-1},
     \label{eq:avar_hat}
 \end{equation}
-where $\hat{\boldsymbol{V}}$ and $\hat{\boldsymbol{Q}}$ replace $\boldsymbol{V}$ and $\boldsymbol{Q}$ with their sample analogues. $(1-\alpha)$ confidence bands for the $k$-th factor are then:
+where $\hat{\boldsymbol{V}}$ replaces $\boldsymbol{V}$ with its sample analogue. $(1-\alpha)$ confidence bands for the $k$-th factor are then:
 \begin{equation}
     \hat{f}_{k,t} \pm z_{\alpha/2}\left[\frac{\widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t)_{kk}}{N}\right]^{1/2},
     \label{eq:ci_factor}
