@@ -112,9 +112,19 @@ Factor estimates carry estimation uncertainty that must be quantified for infere
     \sqrt{N}\left(\hat{\boldsymbol{f}}_t - \boldsymbol{H}'\boldsymbol{f}_t^0\right) \xrightarrow{d} \mathcal{N}\!\left(\boldsymbol{0},\; \boldsymbol{V}^{-1}\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'\boldsymbol{V}^{-1}\right),
     \label{eq:factor_clt}
 \end{equation}
-where $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymbol{V}$ is the probability limit of the diagonal matrix of the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, $\boldsymbol{Q}=\operatorname{plim}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$, and $\boldsymbol{\Gamma}_t$ captures the cross-sectional covariance of the idiosyncratic components at time $t$. We construct a feasible asymptotic variance estimate by replacing population quantities with sample analogues, using the cross-section heteroskedasticity- and autocorrelation-consistent (CS-HAC) estimator of \citet{bai2003inferential} to account for cross-sectional correlation and heteroskedasticity in the idiosyncratic errors. Pointwise $(1-\alpha)$ confidence bands for the $k$-th factor are then:
+where $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymbol{V}$ is the probability limit of the diagonal matrix of the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, $\boldsymbol{Q}=\operatorname{plim}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$, and $\boldsymbol{\Gamma}_t$ captures the cross-sectional covariance of the idiosyncratic components at time $t$. A feasible asymptotic variance estimate replaces each population quantity with its sample analogue. The estimator of $\boldsymbol{\Gamma}_t$ accounts for cross-sectional correlation and heteroskedasticity in the idiosyncratic errors:
+\begin{equation}
+    \hat{\boldsymbol{\Gamma}}_t = \frac{1}{N}\hat{\boldsymbol{\Lambda}}'\hat{\boldsymbol{e}}_t\hat{\boldsymbol{e}}_t'\hat{\boldsymbol{\Lambda}},
+    \label{eq:gamma_hat}
+\end{equation}
+where $\hat{\boldsymbol{e}}_t = \boldsymbol{x}_t - \hat{\boldsymbol{\Lambda}}\hat{\boldsymbol{f}}_t$ are the estimated idiosyncratic residuals at time $t$. The feasible asymptotic variance estimator \citep{bai2003inferential} is then:
+\begin{equation}
+    \widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t) = \hat{\boldsymbol{V}}^{-1}\hat{\boldsymbol{Q}}\,\hat{\boldsymbol{\Gamma}}_t\,\hat{\boldsymbol{Q}}'\hat{\boldsymbol{V}}^{-1},
+    \label{eq:avar_hat}
+\end{equation}
+where $\hat{\boldsymbol{V}}$ and $\hat{\boldsymbol{Q}}$ replace $\boldsymbol{V}$ and $\boldsymbol{Q}$ with their sample analogues. $(1-\alpha)$ confidence bands for the $k$-th factor are then:
 \begin{equation}
     \hat{f}_{k,t} \pm z_{\alpha/2}\left[\frac{\widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t)_{kk}}{N}\right]^{1/2},
     \label{eq:ci_factor}
 \end{equation}
-where $z_{\alpha/2}$ is the upper $\alpha/2$ quantile of the standard normal. The bands are centred at zero: they demarcate the region in which the true factor cannot be distinguished from zero at the $\alpha$ level, providing a natural threshold for identifying periods of statistically significant financial cycle activity.
+where $z_{\alpha/2}$ is the upper $\alpha/2$ quantile of the standard normal.
