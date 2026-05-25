@@ -137,14 +137,14 @@ All numeric claims in the paper must trace to a specific script + output. The cr
 |---|---|---|---|
 | Introduction | `paper/sections/1_intro.tex` | Draft | Well-developed; minor polish needed |
 | Data | `paper/sections/2_data.tex` | Draft | Sample: 10 EU countries, 1995Q3–2024Q3 |
-| Methodology | `paper/sections/3_methodology.tex` | Draft | Fix nested footnote bug |
+| Methodology | `paper/sections/3_methodology.tex` | Draft | |
 | Results | `paper/sections/4_results.tex` | Draft | GAR section needs verification |
-| Conclusion | `paper/sections/5_conclusion.tex` | Needs expansion | Only 3 paragraphs |
+| Conclusion | `paper/sections/5_conclusion.tex` | Draft | Intentionally concise |
 | Appendix A: FC estimates | `paper/appendices/appendix_a_fc.tex` | Draft | |
 | Appendix B: Decomposition | `paper/appendices/appendix_b_dec.tex` | Draft | |
 | Appendix C: CIs | `paper/appendices/appendix_c_ci.tex` | Draft | |
-| Data processing | `scripts/R/01_data_processing.R` | Needs cleaning | Remove institutional paths/proxy |
-| Factor estimation | `scripts/R/02_factor_estimation.R` | Needs cleaning | |
-| Decomposition/EW/GAR | `scripts/R/03_dec_ew_gar.R` | Needs cleaning | |
-| OOS analysis | `scripts/R/04_oos.R` | Needs cleaning | |
+| Data processing | `scripts/R/01_data_processing.R` | Clean | |
+| Factor estimation | `scripts/R/02_factor_estimation.R` | Clean | |
+| Decomposition/EW/GAR | `scripts/R/03_dec_ew_gar.R` | Clean | |
+| OOS analysis | `scripts/R/04_oos.R` | Clean | |
 | Raw data | `data/raw/` | To populate | Copy from old_code_and_data |

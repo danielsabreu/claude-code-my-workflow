@@ -16,7 +16,7 @@
 
 library(here)
 source(here::here("scripts", "R", "auxiliary", "_paths.R"))
-source(file.path(here::here("scripts", "R", "auxiliary"), "_theme.R"))
+source(file.path(AUX_DIR, "_theme.R"))
 
 library(vars)
 library(dfms)
