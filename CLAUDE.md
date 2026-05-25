@@ -138,7 +138,7 @@ All numeric claims in the paper must trace to a specific script + output. The cr
 | Introduction | `paper/sections/1_intro.tex` | Draft | Well-developed; minor polish needed |
 | Data | `paper/sections/2_data.tex` | Draft | Sample: 10 EU countries, 1995Q3–2024Q3 |
 | Methodology | `paper/sections/3_methodology.tex` | Draft | |
-| Results | `paper/sections/4_results.tex` | Draft | GAR section needs verification |
+| Results | `paper/sections/4_results.tex` | Draft | |
 | Conclusion | `paper/sections/5_conclusion.tex` | Draft | Intentionally concise |
 | Appendix A: FC estimates | `paper/appendices/appendix_a_fc.tex` | Draft | |
 | Appendix B: Decomposition | `paper/appendices/appendix_b_dec.tex` | Draft | |
