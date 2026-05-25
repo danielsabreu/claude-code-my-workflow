@@ -75,6 +75,8 @@ quality_reports/preregistrations/*
 
 # R analysis outputs (generated artifacts; keep scripts, ignore outputs)
 scripts/R/_outputs/
+replication/scripts/R/_outputs/
+replication/Figures/
 
 # Output artifacts — uncomment lines below based on your preference
 # *.rds
