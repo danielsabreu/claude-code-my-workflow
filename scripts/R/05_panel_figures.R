@@ -51,7 +51,7 @@ PAIRS <- list(
 plot_fc_country <- function(ctry) {
   dfm <- df_dfm[[ctry]]
 
-  df_long <- melt(dfm[, c("obstime", "pca", "qml", "tstep")],
+  df_long <- reshape2::melt(dfm[, c("obstime", "pca", "qml", "tstep")],
                   id.vars = "obstime", variable.name = "estimator",
                   value.name = "value")
 
@@ -116,7 +116,7 @@ plot_dec_country <- function(ctry) {
   var_names <- c("cred.nfc.roc.2yoy","cred.hh.roc.2yoy","rhp.roc.2yoy",
                  "sp.roc.2yoy","dsr.roc.2yoy","cred.2gdp.roc.2yoy","sprd.bond.diff.2y")
 
-  df_long <- melt(dec_graph, id.vars = c("obstime"),
+  df_long <- reshape2::melt(dec_graph, id.vars = c("obstime"),
                   measure.vars = var_names,
                   variable.name = "variable", value.name = "contribution")
   df_long$variable <- factor(df_long$variable,

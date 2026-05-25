@@ -2,9 +2,11 @@
 # 00_setup.R
 # Financial Cycle Replication Package — Abreu & De Lorenzo Buratta
 #
-# Run once before executing scripts 01–04.
-# Installs all required packages.
+# Run once before executing scripts 01–05.
+# Installs all packages required by the analysis pipeline.
 ###############################################################
+
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 required_packages <- c(
   # Core tidyverse
@@ -25,12 +27,8 @@ required_packages <- c(
   "pROC",
   # Data reshaping
   "reshape2", "data.table",
-  # BIS / OECD data access (used by 00_refresh_data.R only)
-  "BISdata", "countrycode", "httr", "quantmod",
   # Visualization
-  "ggplot2", "ggthemes", "patchwork", "scales",
-  # Tables
-  "kableExtra"
+  "ggplot2", "patchwork", "scales"
 )
 
 new_packages <- required_packages[!required_packages %in% installed.packages()[, "Package"]]
