@@ -21,16 +21,16 @@ Figure~\ref{fig:var_exp} reports the proportion of total variance explained by t
     \label{fig:var_exp}
 \end{figure}
 
-Table~\ref{table_r2} reports the $R^2$ values obtained by regressing each variable on the estimated common component, for all countries in the sample. These values provide a simple measure of how closely each variable co-moves with the financial cycle indicator. The results show that the estimated factor explains a large share of the variation in credit to non-financial corporations, the debt service ratio, and the credit-to-GDP ratio. This finding suggests that the common factor is primarily driven by variables related to credit and indebtedness, which are central to the build-up of cyclical systemic risk.
+Table~\ref{tab:r2} reports the $R^2$ values obtained by regressing each variable on the estimated common component, for all countries in the sample. These values provide a simple measure of how closely each variable co-moves with the financial cycle indicator. The results show that the estimated factor explains a large share of the variation in credit to non-financial corporations, the debt service ratio, and the credit-to-GDP ratio. This finding suggests that the common factor is primarily driven by variables related to credit and indebtedness, which are central to the build-up of cyclical systemic risk.
 
 By contrast, the explanatory power of the factor is generally lower for share prices and sovereign bond spreads, indicating that these variables co-move less systematically with the rest of the dataset. One interpretation is that these series are more strongly influenced by country-specific shocks, global factors, or abrupt changes in market sentiment, which are not fully captured by a single common factor. This pattern is broadly consistent with \citet{drehmann2012characterising}, who emphasise the central role of credit variables in characterising the financial cycle. At the same time, our results suggest that house prices play a more heterogeneous role across countries and, on average, contribute less to the common factor than credit-based indicators.
 
-Some very low $R^2$ values also stand out in Table~\ref{table_r2}, particularly for share prices in Spain, Germany, and the Netherlands, and for house prices in Portugal, Germany, and the Netherlands. These cases likely reflect the fact that, after the transformations and filtering applied to the data, the corresponding series display relatively weak co-movement with the other variables entering the model. In such cases, a single common factor naturally attributes little explanatory power to those series. This does not imply that these variables are unimportant for financial stability in those countries; rather, it indicates that their cyclical dynamics are less aligned with the dominant common component identified by the model.
+Some very low $R^2$ values also stand out in Table~\ref{tab:r2}, particularly for share prices in Spain, Germany, and the Netherlands, and for house prices in Portugal, Germany, and the Netherlands. These cases likely reflect the fact that, after the transformations and filtering applied to the data, the corresponding series display relatively weak co-movement with the other variables entering the model. In such cases, a single common factor naturally attributes little explanatory power to those series. This does not imply that these variables are unimportant for financial stability in those countries; rather, it indicates that their cyclical dynamics are less aligned with the dominant common component identified by the model.
 
 \begin{table}[htbp]
   \centering
   \caption{$R^2$ of the first factor across variables}
-  \label{table_r2}
+  \label{tab:r2}
   \small
   \setlength{\tabcolsep}{5pt}
   \begin{tabular}{l *{7}{S[table-format=1.2]}}
@@ -179,12 +179,12 @@ The parameter $\theta$ controls policymaker preferences. A value of $\theta$ bel
 Finally, we consider the full sample used in the previous analysis, with two exceptions. First, Finland is excluded from the early-warning exercise, as it did not experience a systemic banking crisis during the sample period (1995~Q3--2025~Q3); its major banking crisis occurred in the early 1990s, prior to the start of the sample. Second, we exclude the crisis periods themselves from the sample used to estimate the logit models. This follows the recommendation of \citet{bussiere2006towards}, who show that early-warning model performance can be distorted by the disorderly and volatile adjustment of explanatory variables following the onset of a crisis. To avoid this so-called post-crisis bias, we focus only on the pre-crisis and tranquil periods in the estimation.
 
 \paragraph{In-sample exercise.}
-The results for all countries, presented in Table~\ref{ew_in_sample}, show that the financial cycle indicator constructed using a dynamic factor model has good early-warning properties. On average, the DFM-based indicators outperform the Basel gap in terms of AUROC (0.68 for PCA versus 0.55 for BG), while delivering a comparable usefulness index under both balanced ($\theta=0.5$) and crisis-averse ($\theta=0.7$) preferences. The advantage is particularly marked for Germany, where the Basel gap delivers near-zero usefulness under crisis-averse preferences (0.02), while the PCA-based indicator remains informative (0.13). Among estimators, PCA and the two-step estimator perform similarly, while QML exhibits more variation across countries.
+The results for all countries, presented in Table~\ref{tab:ew_in_sample}, show that the financial cycle indicator constructed using a dynamic factor model has good early-warning properties. On average, the DFM-based indicators outperform the Basel gap in terms of AUROC (0.68 for PCA versus 0.55 for BG), while delivering a comparable usefulness index under both balanced ($\theta=0.5$) and crisis-averse ($\theta=0.7$) preferences. The advantage is particularly marked for Germany, where the Basel gap delivers near-zero usefulness under crisis-averse preferences (0.02), while the PCA-based indicator remains informative (0.13). Among estimators, PCA and the two-step estimator perform similarly, while QML exhibits more variation across countries.
 
 \begin{table}[htbp]
   \centering
   \caption{In-sample early-warning exercise}
-  \label{ew_in_sample}
+  \label{tab:ew_in_sample}
   \footnotesize
   \setlength{\tabcolsep}{2pt}
   \begin{tabular}{l @{\hspace{1em}}

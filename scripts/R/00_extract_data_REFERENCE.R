@@ -4,12 +4,7 @@
 
 rm(list=ls())
 
-setwd("G:/6.APM/Financial Cycle")
-
 lct <- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
-
-Sys.setenv(http_proxy = "proxy.bportugal.pt:8080")
-Sys.setenv(https_proxy = "proxy.bportugal.pt:8080")
 
 #devtools::install_github("expersso/BIS")
 #remotes::install_github("https://github.com/expersso/OECD") ##  There is a bug in the version of the OECD package on CRAN
