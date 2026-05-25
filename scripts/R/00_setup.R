@@ -2,9 +2,11 @@
 # 00_setup.R
 # Financial Cycle Replication Package — Abreu & De Lorenzo Buratta
 #
-# Run once before executing scripts 01–04.
-# Installs all required packages.
+# Run once before executing scripts 01–05.
+# Installs all packages required by the analysis pipeline.
 ###############################################################
+
+options(repos = c(CRAN = "https://cloud.r-project.org"))
 
 required_packages <- c(
   # Core tidyverse
