@@ -89,6 +89,11 @@ df_ic_avar <- map2(df_ic_avar, df_dfm, function(.x, .y) {
   if (cor(.x$avar$factor, .y$pca) < 0) {
     .x$avar$factor <- .x$avar$factor * -1
   }
+  # Recompute average CI bounds after sign alignment so that dashed lines
+  # and regime thresholds equal mean(factor) +/- ci_half for each country:
+  ci_half <- .x$avar$factor.p90[1]   # positive scalar; sign-invariant
+  .x$avar$factor.p90.mean <- mean(.x$avar$factor) + ci_half
+  .x$avar$factor.p10.mean <- mean(.x$avar$factor) - ci_half
   list(ic = .x$ic, avar = .x$avar, loadings = .x$loadings, var_exp = .x$var_exp)
 })
 
@@ -218,12 +223,12 @@ df_ci_median <- aggregate(
   na.rm = TRUE
 )
 names(df_ci_median)[2:3] <- c("factor", "ci_half_med")
-med_ci <- mean(df_ci_median$ci_half_med)
-# Ribbon and dashed lines are centred at 0 (neutral-zone convention):
-df_ci_median$factor.p10      <- -df_ci_median$ci_half_med   # time-varying lower bound
-df_ci_median$factor.p90      <-  df_ci_median$ci_half_med   # time-varying upper bound
-df_ci_median$factor.p10.mean <- -med_ci                     # constant lower threshold
-df_ci_median$factor.p90.mean <-  med_ci                     # constant upper threshold
+# Ribbon centred on the factor (CI for the factor at each t):
+df_ci_median$factor.p10 <- df_ci_median$factor - df_ci_median$ci_half_med
+df_ci_median$factor.p90 <- df_ci_median$factor + df_ci_median$ci_half_med
+# Dashed lines = time-averaged upper and lower CI bounds:
+df_ci_median$factor.p10.mean <- mean(df_ci_median$factor.p10)
+df_ci_median$factor.p90.mean <- mean(df_ci_median$factor.p90)
 
 p_ci <- ggplot(df_ci_median, aes(x = obstime)) +
   geom_ribbon(aes(ymin = factor.p10, ymax = factor.p90),
