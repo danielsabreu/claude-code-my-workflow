@@ -34,7 +34,7 @@ Let $\hat{\boldsymbol{\lambda}}_1, \dots, \hat{\boldsymbol{\lambda}}_r$ denote t
 \hat{\boldsymbol{\Lambda}} = \sqrt{N}\,[\hat{\boldsymbol{\lambda}}_1, \dots, \hat{\boldsymbol{\lambda}}_r], \qquad \hat{\boldsymbol{f}}_t = N^{-1}\hat{\boldsymbol{\Lambda}}'\boldsymbol{x}_t
 \end{equation}
 
-The consistency of the PCA estimator was established by \citet{bai2002determining} and \citet{stock2002forecasting}, while \citet{bai2003inferential} provides asymptotic distribution theory. After estimating the factors, their dynamics can be characterised by fitting a VAR model. Based on standard information criteria, we select $p = 4$.
+The consistency of the PCA estimator was established by \citet{bai2002determining} and \citet{stock2002forecasting}, while \citet{bai2003inferential} provides asymptotic distribution theory. After estimating the factors, their dynamics can be characterised by fitting a VAR model.
 
 \paragraph{Quasi-maximum likelihood (QML) estimation.}
 
@@ -112,7 +112,7 @@ Factor estimates carry estimation uncertainty that must be quantified for infere
     \sqrt{N}\left(\hat{\boldsymbol{f}}_t - \boldsymbol{H}'\boldsymbol{f}_t^0\right) \xrightarrow{d} \mathcal{N}\!\left(\boldsymbol{0},\; \boldsymbol{V}^{-1}\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'\boldsymbol{V}^{-1}\right),
     \label{eq:factor_clt}
 \end{equation}
-where $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymbol{V}$ is the probability limit of the diagonal matrix of the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, $\boldsymbol{Q}=\operatorname{plim}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$, and $\boldsymbol{\Gamma}_t$ captures the cross-sectional covariance of the idiosyncratic components at time $t$. A feasible estimator replaces $\boldsymbol{V}$ with its sample analogue $\hat{\boldsymbol{V}}$ and estimates the rotated sandwich $\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'$ as a single unit via $\hat{\boldsymbol{\Gamma}}_t$. The estimator $\hat{\boldsymbol{\Gamma}}_t$ accounts for cross-sectional correlation and heteroskedasticity in the idiosyncratic errors:
+where $\boldsymbol{H}$ is the rotation matrix from PCA normalisation, $\boldsymbol{V}$ is the probability limit of the diagonal matrix of the $r$ largest eigenvalues of $(NT)^{-1}\boldsymbol{X}\boldsymbol{X}'$, $\boldsymbol{Q}=\operatorname{plim}\hat{\boldsymbol{F}}'\boldsymbol{F}^0/T$, and $\boldsymbol{\Gamma}_t$ captures the cross-sectional covariance of the idiosyncratic components at time $t$. A feasible estimator replaces $\boldsymbol{V}$ with its sample analogue $\hat{\boldsymbol{V}}$ and estimates $\boldsymbol{Q}\boldsymbol{\Gamma}_t\boldsymbol{Q}'$ via $\hat{\boldsymbol{\Gamma}}_t$. The estimator $\hat{\boldsymbol{\Gamma}}_t$ accounts for cross-sectional correlation and heteroskedasticity in the idiosyncratic errors:
 \begin{equation}
     \hat{\boldsymbol{\Gamma}}_t = \frac{1}{N}\hat{\boldsymbol{\Lambda}}'\hat{\boldsymbol{e}}_t\hat{\boldsymbol{e}}_t'\hat{\boldsymbol{\Lambda}},
     \label{eq:gamma_hat}
@@ -127,4 +127,4 @@ $(1-\alpha)$ confidence bands for the $k$-th factor are then:
     \hat{f}_{k,t} \pm z_{\alpha/2}\left[\frac{\widehat{\mathrm{Avar}}(\hat{\boldsymbol{f}}_t)_{kk}}{N}\right]^{1/2},
     \label{eq:ci_factor}
 \end{equation}
-where $z_{\alpha/2}$ is the upper $\alpha/2$ quantile of the standard normal.
+where $z_{\alpha/2}$ is the upper $\alpha/2$ percentile of the standard normal.
