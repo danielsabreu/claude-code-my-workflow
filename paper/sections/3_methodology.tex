@@ -91,7 +91,7 @@ In the second step, these first-step estimates are treated as fixed parameters a
 \begin{equation}
 \hat{\boldsymbol{F}}_{t|t-1} = \hat{\boldsymbol{A}}\,\hat{\boldsymbol{F}}_{t-1|t-1}
 \end{equation}
-while the update step corrects the current-period factor block $\hat{\boldsymbol{f}}_{t|t-1}$ using the current observation:
+where $\hat{\boldsymbol{F}}_{t|t-1}$ is the predicted companion state vector given information up to $t-1$, and $\hat{\boldsymbol{F}}_{t-1|t-1}$ is the filtered state from the previous period. The update step then corrects the current-period factor block $\hat{\boldsymbol{f}}_{t|t-1}$ using the current observation:
 \begin{equation}
 \hat{\boldsymbol{f}}_{t|t}
   = \hat{\boldsymbol{f}}_{t|t-1}
@@ -101,7 +101,7 @@ while the update step corrects the current-period factor block $\hat{\boldsymbol
         _{\text{prediction error}},
 \label{eq:kalman_update}
 \end{equation}
-where $\boldsymbol{K}_t$ is the Kalman gain matrix. The prediction error captures the extent to which the current observation departs from what the factor dynamics alone would imply; the gain assigns it the optimal weight relative to the model prediction. A backward smoothing pass then incorporates future observations into each estimate, delivering the full-sample smoothed factor $\hat{\boldsymbol{f}}_{t|T}$.
+where $\hat{\boldsymbol{f}}_{t|t}$ is the filtered estimate of the factor at time $t$, and $\boldsymbol{K}_t$ is the Kalman gain matrix. The prediction error captures the extent to which the current observation departs from what the factor dynamics alone would imply; the gain assigns it the optimal weight relative to the model prediction. A backward smoothing pass then incorporates future observations into each estimate, delivering the full-sample smoothed factor $\hat{\boldsymbol{f}}_{t|T}$.
 
 The result is a factor estimate that draws simultaneously on the cross-sectional covariation in $\boldsymbol{x}_t$ and the intertemporal structure encoded in the VAR, incorporating the full sample at each $t$ in a single non-iterative pass. Although $\hat{\boldsymbol{\Psi}}$ imposes cross-sectional orthogonality on the idiosyncratic components, \citet{doz2011two} show that the resulting estimates remain consistent, as the bias from this misspecification vanishes asymptotically.
 
