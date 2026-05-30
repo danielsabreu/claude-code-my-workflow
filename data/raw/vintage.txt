@@ -1,5 +1,0 @@
-Vintage:    2026-05-20
-Build:      FULL rebuild from public APIs (BIS + OECD)
-Range:      1999-03-31 to 2025-09-30
-Countries (10): BE, DE, ES, FI, FR, GB, IT, NL, PT, SE
-
