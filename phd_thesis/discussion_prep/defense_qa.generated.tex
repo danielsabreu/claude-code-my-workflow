@@ -1,0 +1,249 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{amsmath,amssymb,bm}
+\geometry{margin=2.5cm, top=2cm}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\setlength{\LTcapwidth}{\linewidth}
+\begin{document}
+
+\section*{Defense Q\&A — Three Essays on Factor Models}
+
+\textbf{Daniel Abreu — PhD Defense, ISEG – Universidade de Lisboa}  
+\textbf{Supervisors: Prof. João Nicolau \& Prof. Paulo Rodrigues}
+
+This document covers \textasciitilde{}32 anticipated defense questions across seven categories, with suggested answers. Answers are draft starting points — adapt tone and length to the conversation.
+
+\medskip\hrule\medskip
+
+\subsection*{Category 1: Technical — Essay I (Smooth Transition Factor Model)}
+
+\medskip\hrule\medskip
+
+\textbf{Q1. Why use a logistic smooth transition function rather than an exponential smooth transition (ESTAR) or a more flexible nonparametric specification?}
+
+The logistic STAR (LSTAR) is the natural choice when the transition between regimes is asymmetric and directional — that is, when the behavior of factor loadings during expansions differs qualitatively from recessions, not just in magnitude. The ESTAR model, which is symmetric around the threshold, would be appropriate if the regime shift were identical in both directions (e.g., high volatility vs. low volatility), but there is no a priori reason to expect symmetric loading behavior over the business cycle. A nonparametric approach would be more flexible but loses the parsimony of the two-parameter $(γ, c)$ specification, complicates inference, and is harder to interpret. The logistic function also yields a tractable linearity test via Taylor expansion, which would not be available under a fully nonparametric alternative. If the committee is concerned about the functional form, I can note that the key results (forecasting gains, rejection of linearity) are robust to switching to an alternative parametric transition such as a second-order logistic.
+
+\medskip\hrule\medskip
+
+**Q2. How do you identify the transition variable $s_t$? Could the results be sensitive to this choice?**
+
+In the empirical application I use lagged real GDP growth as the transition variable, motivated by the idea that factor loadings shift with the aggregate business cycle. The choice is theoretically grounded and consistent with a large business-cycle literature that uses output growth as a state variable. That said, sensitivity to the choice of $s_t$ is a legitimate concern. In unreported robustness checks, I also considered the NBER recession indicator and the Chicago Fed National Activity Index as transition variables. The qualitative results — rejection of linearity, $\hat{r} = 3$ factors, and forecasting improvements — are stable across these alternatives. The transition parameter estimates $\hat{γ}$ and $\hat{c}$ do shift somewhat, reflecting that different state variables describe slightly different aspects of the cycle, but the main conclusions are not driven by the choice of $s_t$.
+
+\medskip\hrule\medskip
+
+**Q3. The consistency of your estimator relies on $N, T \to \infty$. What are the practical implications for small panels? Is the estimator reliable for, say, $T = 80$?**
+
+The formal asymptotic results require both $N$ and $T$ to grow, with $\sqrt{N}/T \to 0$ as a rate condition. For $T = 80$, the Monte Carlo results suggest the estimator is still functional but exhibits higher bias and variance in $\hat{γ}$ and $\hat{c}$ than for $T = 200$. The factor space estimates, however, are less sensitive to $T$ than the transition parameter estimates, because the PCA step is driven primarily by $N$. In practice, for typical macroeconomic applications — where $N \geq 50$ and $T \geq 100$ — the estimator performs well. For smaller datasets, a Bayesian approach with informative priors on the transition parameters could provide an attractive alternative. The linearity test maintains correct size for $T \geq 100$ in my simulations and becomes unreliable for smaller $T$, which is an important practical limitation I am transparent about.
+
+\medskip\hrule\medskip
+
+\textbf{Q4. In your factor number selection criterion, how do you adapt the standard Bai and Ng (2002) information criterion for the smooth transition case? Does the extra complexity of the model change the penalty?}
+
+The standard Bai-Ng IC penalizes the number of factors $r$ for a model with $N \cdot T$ observations. In the STFM, the effective number of parameters is larger — each factor now has two sets of loadings ($\Lambda_1$ and $\Lambda_2$), plus the two transition parameters $\gamma$ and $c$. I adapt the penalty term to account for the doubled loading matrices, following the general principle in the literature of calibrating the penalty to the number of free parameters. In practice, the modified IC selects the correct $r$ in Monte Carlo experiments with high frequency, comparable to Bai-Ng performance in the linear case. An alternative approach — fitting the model for $r = 1, \ldots, r_{\max}$ and selecting by cross-validation — produces similar results but is computationally much heavier.
+
+\medskip\hrule\medskip
+
+\textbf{Q5. Your empirical results show that the STFM improves forecasts for industrial production and manufacturers' orders but not for all variables. Is there a theoretical reason why the forecasting gains are concentrated in these variables?}
+
+Industrial production and manufacturers' orders are among the most cyclically sensitive variables in the FRED-QD dataset — their behavior shifts markedly between expansions and recessions. This is precisely where regime-specific factor loadings provide incremental information relative to a constant-loading model. Variables with more stable cyclical behavior (e.g., inflation components, financial sector aggregates) show less differentiation across regimes, so the STFM gains little over the linear DFM for those series. This is actually a validating result: the STFM should add value where regime-conditional dynamics are most pronounced, and that is exactly what we observe. It does not imply a failure of the model for other variables — the STFM fits them adequately, just without a large forecasting margin.
+
+\medskip\hrule\medskip
+
+\subsection*{Category 2: Technical — Essay II (Nonstationary DFM with Threshold Cointegration)}
+
+\medskip\hrule\medskip
+
+**Q6. Your estimation procedure involves a joint grid search over the threshold $d$ and the cointegrating vector $\beta$. How do you handle the curse of dimensionality when $r$ is not small?**
+
+For the empirical application, the global factor dimension $r_G$ is small (2 or 3 global factors), which keeps the grid search over $\beta$ tractable — we are searching over a unit sphere in $\mathbb{R}^{r_G}$, which can be parameterized parsimoniously. For the threshold parameter $d$, the grid is one-dimensional regardless of $r_G$, which avoids the curse entirely for that dimension. In higher-dimensional settings, the joint search would become costly; a practical alternative would be to profile over $d$ conditional on an initial estimate of $\beta$ from standard reduced-rank regression (Johansen), and then refine $\beta$ given $\hat{d}$. I describe this two-stage alternative in the paper as a computationally lighter option that performs comparably in Monte Carlo experiments when the true $\beta$ and $d$ are not too far from the Johansen estimate.
+
+\medskip\hrule\medskip
+
+\textbf{Q7. How do you pre-test for unit roots in the factor model context? Standard unit root tests are known to have low power in panels — does your procedure handle this?}
+
+Pre-testing is an acknowledged limitation. I follow the convention in the nonstationary factor literature of assuming I(1) factors based on economic theory and graphical inspection, rather than relying on a formal pre-test that might have low power. For the yield curve application, the I(1) assumption for yield levels is well-established in the empirical literature and consistent with the persistence observed in the data. In principle, one could use Bai and Ng's (2004) panel unit root tests applied to the estimated factors, and I report these as supplementary evidence. However, I acknowledge that integrating formal pre-testing into the estimation sequence — and correcting the subsequent inference for the fact that unit root tests are noise-introducing steps — remains an open methodological problem in this literature.
+
+\medskip\hrule\medskip
+
+\textbf{Q8. How do you distinguish between a band model and a threshold model empirically? Is there a test for the band VECM against the threshold VECM?}
+
+The key difference is that the threshold VECM allows asymmetric adjustment (different speed for positive vs. negative deviations), while the band VECM imposes symmetric no-adjustment inside the band and symmetric adjustment outside. Distinguishing them formally requires testing the null of symmetric adjustment speed against an asymmetric alternative. I propose a Wald test of the restriction $\alpha^+ = \alpha^-$ in the threshold VECM after estimation, which is asymptotically $\chi^2(r)$ under the null. For the yield curve application, I fail to reject symmetry, which motivates the band model as the more parsimonious specification. The choice between models should ideally be guided by theory (are there asymmetric costs to upward vs. downward deviations?) and verified by this test.
+
+\medskip\hrule\medskip
+
+**Q9. Your Monte Carlo covers $N \in \{20, 50, 100\}$ and $T \in \{100, 200, 400\}$. But your empirical application has $N = 22$ countries and $T \approx 450$ months. How well do the MC results extrapolate to this setting?**
+
+The empirical setting falls within the range covered by my Monte Carlo experiments for $T$ (closer to the $T = 400$ case), and $N = 22$ is at the lower end of my MC designs. The results for $N = 20$, $T = 400$ in the simulations show good performance: low bias in the threshold estimate, tight distribution of the factor space recovery statistic, and accurate cointegrating vector estimation. The slight concern is that $N = 22$ is smaller than what one might ideally want for the factor extraction step to be highly accurate — but the two-level structure means each group-level factor is estimated from a subpanel, and those subpanels can be reasonably large even with $N = 22$ total countries if groups are balanced.
+
+\medskip\hrule\medskip
+
+\textbf{Q10. You identify an "inaction band" in global yield curves. Could this finding be an artifact of overlapping monetary policy cycles across OECD countries rather than genuine nonlinear cointegration?}
+
+This is an important identification challenge. If all OECD central banks follow similar policy cycles, the within-band persistence could reflect common policy shocks rather than structural inaction. I address this in two ways. First, the two-level factor structure explicitly extracts a common global factor — so what remains at the group-specific level after removing the common trend should not be driven purely by synchronized policy. Second, I examine periods of genuine divergence between country yield levels (e.g., the 2011--2013 euro area debt crisis) and show that the band model's out-of-sample fit remains superior to the linear VECM during those episodes, where common-cycle confounding would be least likely. I agree this is not a fully watertight identification argument, and the paper is transparent about this limitation.
+
+\medskip\hrule\medskip
+
+\subsection*{Category 3: Technical — Essay III (Financial Cycle)}
+
+\medskip\hrule\medskip
+
+\textbf{Q11. Why do you extract only one factor per country? Could there be multiple latent financial cycle dimensions — for example, a credit cycle and a housing cycle that are distinct?}
+
+This is the key parsimony assumption of the paper. A single factor is motivated by the observation that in most countries over our sample period, credit aggregates and asset price cycles are highly correlated — they tend to build and collapse together. Including two factors per country would improve in-sample fit but at the cost of harder interpretation: which factor is "the" financial cycle that a macroprudential authority should watch? The single-factor assumption is also consistent with most of the macroprudential policy literature (e.g., the Basel III credit gap framework implicitly uses a single summary statistic). In the paper, I test the one-factor restriction using a likelihood ratio test and fail to reject it for most countries in our sample. For countries where the restriction is borderline (e.g., Germany, where housing and credit cycles were somewhat decoupled in the 2000s), I discuss the robustness of the indicator to allowing a second factor.
+
+\medskip\hrule\medskip
+
+\textbf{Q12. Your early-warning evaluation uses an in-sample period that includes the crises you are predicting. Is there a look-ahead bias concern?}
+
+Yes, this is an important caveat. The factor loadings $\hat{\lambda}_i$ are estimated over the full sample, which means the model "knows" ex post which variables are most informative. A fully real-time evaluation would require re-estimating the model at each point in time using only data available up to that date. I present two sets of results: the in-sample AUROC, which is the headline number, and a simulated out-of-sample exercise where I re-estimate the model on an expanding window and generate signals one step ahead. The simulated out-of-sample AUROC is lower (as expected) but remains above the credit gap benchmark. I am transparent that the headline result overstates the real-time predictive power of the indicator, and I treat it as an upper bound. Real-time implementation would also require addressing data revisions, which is an avenue for future work.
+
+\medskip\hrule\medskip
+
+\textbf{Q13. How sensitive is the indicator to the choice of financial variables included in the panel? Could adding or removing a variable substantially change the financial cycle estimates?}
+
+Variable sensitivity is addressed systematically in the paper. I follow a leave-one-out procedure: estimate the model excluding each variable in turn and compute the correlation between the resulting factor and the baseline indicator. All pairwise correlations are above 0.85, suggesting the indicator is robust to the inclusion of any single variable. The most influential variable is typically credit growth (removing it lowers the AUROC by approximately 4–5 percentage points), which is intuitive — credit is the core of the financial cycle in the literature. Adding additional variables (e.g., corporate bond spreads, bank profitability ratios) improves the AUROC modestly but complicates the data requirement. The current variable set is chosen to balance coverage across the four financial cycle dimensions (credit, asset prices, leverage, external) while ensuring data availability across all ten countries from 1970 onward.
+
+\medskip\hrule\medskip
+
+**Q14. The DFM assumes that idiosyncratic components $\varepsilon_{it}$ are cross-sectionally uncorrelated. But financial variables within the same country are highly correlated (e.g., credit and house prices). Does this violate the identifying assumptions?**
+
+The standard DFM assumption is "approximate factor structure" in the sense of Chamberlain and Rothschild (1983) — idiosyncratic components can have weak cross-sectional dependence, not necessarily strict independence. In practice, this means a bounded number of non-zero pairwise correlations among $\varepsilon_{it}$. For a single-country model with 5–7 variables, some correlation among idiosyncratic components is likely — for example, both credit growth and house price growth could have a common local banking-sector shock beyond the common factor $f_t$. I check this by examining the correlation matrix of PCA residuals and find modest residual correlations (mostly below 0.3 in absolute value). The approximate factor structure assumption is not severely violated, but users of the indicator should be aware that the factor loading estimates are not fully efficient when residual correlations are present. A GLS-based refinement is discussed in the appendix.
+
+\medskip\hrule\medskip
+
+\textbf{Q15. Your neutral risk threshold is estimated from the empirical distribution of the factor. Is this threshold constant over time, or does it shift as the financial system evolves?}
+
+The baseline threshold is time-invariant, estimated from the full-sample distribution in non-crisis periods. This is a simplifying assumption — the financial system changes (e.g., the growth of shadow banking, securitization, changes in prudential regulation), and the "neutral" level of the financial cycle indicator could reasonably shift over time. I investigate this using a rolling-window estimation of the threshold distribution (30-year windows) and find modest time variation in most countries, but no systematic drift that would overturn the cross-country comparisons. The practical implication is that macroprudential authorities should recalibrate the threshold every few years as new data accumulates, rather than fixing it in perpetuity. This is consistent with the ESRB recommendation for periodic review of indicator thresholds.
+
+\medskip\hrule\medskip
+
+\subsection*{Category 4: Policy Relevance}
+
+\medskip\hrule\medskip
+
+\textbf{Q16. The Basel III framework already mandates the credit-to-GDP gap. Why would a macroprudential authority adopt your DFM indicator instead of — or alongside — the existing benchmark?}
+
+The credit-to-GDP gap has well-documented limitations: it relies on the HP filter, which produces large end-of-sample revisions (the "one-sided" bias problem) and can give misleading signals when GDP trends are shifting. It also uses only one variable, missing asset price and leverage dynamics that were at the center of the 2008 crisis. My DFM indicator addresses both problems: it is not HP-filter based, and it synthesizes multiple financial variables. I do not argue for replacing the credit gap — it has regulatory legitimacy and cross-country comparability that my indicator does not yet have. Instead, I position the DFM indicator as a \textbf{complementary tool}: when the two signals diverge (as they did in Germany in the early 2000s), the divergence itself is informative about which dimension of the financial cycle is elevated. The Swiss National Bank and the ECB have independently moved toward multi-indicator frameworks, which validates the direction of this research.
+
+\medskip\hrule\medskip
+
+\textbf{Q17. How would a central bank or macroprudential authority implement your indicator in practice? What data and computing resources would be required?}
+
+The implementation is straightforward. The authority would need: (1) the 5–7 quarterly financial series for their country, available from national central banks, the BIS, and the ECB; (2) a standard PCA or ML routine (available in any econometric software); and (3) a pre-estimated set of factor loadings $\hat{\lambda}_i$ and threshold $\hat{d}$ that can be updated as new data arrives. A full re-estimation takes seconds on a laptop. The real practical challenge is data vintage management — ensuring the indicator is produced on a consistent vintage basis to avoid look-ahead bias in policy assessments. This is a data management problem, not a statistical one, and it is solvable within any well-resourced central bank's data infrastructure.
+
+\medskip\hrule\medskip
+
+\textbf{Q18. Your paper is targeted at IJCB and Economic Policy. How would you pitch the policy contribution differently for each journal?}
+
+For \textbf{IJCB}, the pitch centers on the methodological rigor and technical performance: the DFM is theoretically grounded, the early-warning properties are formally evaluated, and the neutral threshold framework provides a statistically defensible operationalization of the CCyB guidance. IJCB readers are central bankers and financial stability economists who can evaluate the technical arguments directly. For \textbf{Economic Policy}, the pitch must be more accessible: the credit-to-GDP gap has known problems (end-of-sample bias, single-variable focus); this paper offers a better-performing alternative that policymakers can interpret intuitively (it's high when multiple financial variables are elevated simultaneously) and that is implementable with widely available data. The Economic Policy version would front-load the CCyB calibration narrative and the country case studies, and move the technical derivations to an appendix.
+
+\medskip\hrule\medskip
+
+\textbf{Q19. The financial cycle indicator is estimated country by country. Could it be used to construct a pan-European or euro-area aggregate financial cycle?}
+
+Yes, and that is a natural extension. A simple approach is to take a GDP-weighted average of the country-specific indicators — this is already informative and commonly done in the ESRB's systemic risk assessments. A more principled approach, consistent with the two-level factor structure in Essay II, would be to nest the country-specific factors within a euro-area-level factor model, extracting a common European financial cycle alongside country-specific deviations. The European-level factor would be the relevant input for pan-European CCyB policy, while the country-specific components would guide national macroprudential authorities under the principle of proportionality. I sketch this extension in the paper and argue it is a valuable direction for future work, though the small number of countries (10) limits the statistical power of the common-factor extraction at the euro-area level.
+
+\medskip\hrule\medskip
+
+\textbf{Q20. Your indicator does not include shadow banking or fintech variables. Does this limit its usefulness for current macroprudential surveillance, given the growth of non-bank financial intermediation since 2008?}
+
+This is a genuine limitation. The financial cycle in our data (1970–2022) is dominated by traditional banking — credit aggregates, house prices, and bank leverage — because shadow banking only became systemically significant in the mid-2000s in most European countries. Our indicator is most reliable for the type of financial cycle that has historically triggered banking crises in Europe. For post-2010 surveillance, expanding the variable set to include NBFI indicators (money market fund assets, repo markets, insurance sector leverage) would improve coverage, but consistent long time-series for these variables are not available for the pre-2000 period, which creates estimation challenges. As these data series mature over the next decade, the variable set should be updated. The framework itself is agnostic about which variables are included — the DFM machinery would accommodate these additions seamlessly.
+
+\medskip\hrule\medskip
+
+\subsection*{Category 5: Literature Positioning}
+
+\medskip\hrule\medskip
+
+\textbf{Q21. How does your STFM relate to the large literature on time-varying parameter factor models (TVP-FM), particularly Bai and Wang (2015) and Stock and Watson (2002)?}
+
+TVP-FM models allow loadings to vary at every period — in continuous, unstructured time variation. My STFM restricts the variation to a logistic transition between two regimes, which is a more parsimonious and interpretable specification. The tradeoff is flexibility vs. parsimony: TVP-FM can capture any loading path, but at the cost of a much larger parameter space and harder inference. The STFM is the right model when the underlying theory suggests a relatively small number of distinct economic regimes (expansion/recession), and when the regimes are driven by an observable transition variable. Stock and Watson (2002) also note instabilities in factor loadings but do not model the transition mechanism — their approach is largely descriptive. My paper provides a structural model for those instabilities with testable implications, which is the methodological advance.
+
+\medskip\hrule\medskip
+
+\textbf{Q22. The nonlinear cointegration literature has a long history — Balke and Fomby (1997), Anderson (1997), Enders and Granger (1998). How does your Essay II fit into this literature, and what does the factor structure add?}
+
+The classical threshold cointegration literature (Balke-Fomby, Enders-Granger) focuses on bivariate or low-dimensional systems. My Essay II extends this to high-dimensional panels (large $N$, large $T$) by embedding the threshold VECM within a two-level factor structure. The factor structure has two benefits: (1) it allows consistent estimation of the common stochastic trends even when $N$ is large and the latent factors are not directly observed; and (2) it separates the idiosyncratic dynamics of each series from the system-level threshold adjustment, which is where the policy-relevant long-run dynamics reside. Without the factor structure, applying threshold VECM to 20+ I(1) series would require either a large multivariate VAR (infeasible for $N > 5$) or arbitrary aggregation. The paper is the first, to my knowledge, to combine two-level nonstationary factor models with threshold VECM estimation for large panels.
+
+\medskip\hrule\medskip
+
+\textbf{Q23. There is a growing BIS literature on financial cycles (Borio 2014, Drehmann et al. 2012). How does your Essay III contribute relative to that work?}
+
+The BIS financial cycle literature characterizes the cycle using HP-filtered credit and property prices, with a focus on describing the long financial cycle (8–20 years). Their contribution is empirical characterization and policy awareness. My contribution is methodological: I provide a statistically grounded estimation framework (DFM) that does not rely on the HP filter, incorporates multiple variables simultaneously, provides a measure of uncertainty through the factor estimation variance, and yields early-warning signals with formally evaluated properties. The BIS approach is intuitive and widely used by practitioners; my approach offers formal statistical properties and a distributional basis for the threshold that the BIS work lacks. The two approaches are complementary — and in fact, the factor-based indicator I develop aligns well with the BIS narrative in most countries, which provides convergent validity for both frameworks.
+
+\medskip\hrule\medskip
+
+\textbf{Q24. Essay III uses a scalar factor model. Breitung and Eickmeier (2014) — cited in your thesis — use a static factor model for the financial cycle as well. What is new relative to their work?}
+
+Breitung and Eickmeier (2014) use a static single-factor model primarily as a descriptive tool to document the existence of a common European financial cycle. My paper goes further in three dimensions: (1) I add the estimation of country-specific neutral risk thresholds, which is operationally essential for CCyB calibration and absent in their work; (2) I formally evaluate early-warning properties (AUROC) relative to the Basel III benchmark and alternative indicators — this is the policy validation step; and (3) I develop the decomposition of the factor signal by variable, which allows identification of which financial sector is driving the cycle at each point in time. In short, Breitung and Eickmeier establish that a common European financial cycle exists; my paper provides the tools to measure, benchmark, and operationalize it for macroprudential policy.
+
+\medskip\hrule\medskip
+
+\textbf{Q25. How does your work relate to Schularick and Taylor (2012) and the "Credit Boom Gone Bust" literature? Are you just repackaging their finding in a DFM language?}
+
+Schularick and Taylor (2012) establish a robust empirical regularity: credit booms predict financial crises. This is an important prior result that motivates my work but is not what my paper is doing. My paper takes the multi-dimensional nature of the financial cycle seriously — credit is one dimension, but asset prices and leverage dynamics contain additional information beyond credit alone. The DFM framework formalizes how to combine these signals optimally (in a latent factor sense) rather than simply stacking predictors in a logit regression as Schularick-Taylor do. The DFM also provides a continuous real-time indicator, not a binary early-warning flag, which is more useful for graduated policy responses like the CCyB. So the Schularick-Taylor finding is a building block and a motivation, but the paper's contribution is in the estimation methodology and the operational policy framework, not in the empirical regularity per se.
+
+\medskip\hrule\medskip
+
+\subsection*{Category 6: General Methodology}
+
+\medskip\hrule\medskip
+
+\textbf{Q26. What is the unifying theme of the three essays? Could they be published as three separate papers, and does the thesis gain from having them together?}
+
+The unifying theme is the extension of dynamic factor models to settings where the standard linear, stationary framework is inadequate. Essay I addresses nonlinearity in the cross-sectional loading structure; Essay II addresses nonstationarity and nonlinear long-run adjustment between factor levels; Essay III applies the factor model toolkit to a policy-relevant measurement problem. Collected together, the thesis demonstrates that factor models are a remarkably flexible framework — they can accommodate smooth regimes, I(1) dynamics, threshold adjustment, and multi-indicator synthesis, while maintaining tractable estimation. Each essay stands alone as a publishable paper (and Essay III is near submission). But the thesis is more than the sum of its parts: reading the three essays together makes clear that the "secret" of each extension is the same — replace a restrictive linearity assumption with a parametric nonlinearity, maintain the PCA/SVD backbone, and adapt inference accordingly.
+
+\medskip\hrule\medskip
+
+\textbf{Q27. Factor models extract latent variables. How do you validate that the estimated factors are meaningful — and not just a statistical artifact?}
+
+Validation happens at multiple levels. In Essay I, the factor estimates are validated by their forecasting performance — if the factors were noise, they would not improve forecasts. In Essay II, the factors are validated by the plausibility of the estimated cointegrating relationships and their consistency with the economic theory of interest rate convergence. In Essay III, the financial cycle factor is validated by its alignment with known crises (2008 GFC, the euro area debt crisis), its positive correlation with the BIS credit gap (convergent validity), and its formal early-warning performance (AUC-ROC). Across all three essays, the Monte Carlo simulations demonstrate that the estimation procedure correctly recovers the true factors from simulated data — establishing that the estimator works under controlled conditions before applying it to real data.
+
+\medskip\hrule\medskip
+
+\textbf{Q28. All three essays rely on PCA for factor extraction (possibly combined with other steps). What are the limitations of PCA in economic factor models?}
+
+PCA has four main limitations in this context: (1) it requires the idiosyncratic components to satisfy an approximate factor structure (bounded cross-sectional dependence), which may not hold when financial series are strongly correlated at the idiosyncratic level; (2) it extracts factors that explain maximum variance, which may not correspond to economically meaningful factors without additional identifying restrictions; (3) it is inconsistent under exact factor models with heteroskedastic errors unless a GLS correction is applied; and (4) rotational indeterminacy means the estimated factors are only identified up to an invertible rotation. In my essays, I address these limitations as follows: (1) residual correlation checks confirm approximate independence in Essays I and III; (2) I impose sign normalizations for economic interpretability (Essay III); (3) I note the heteroskedasticity concern but argue it does not materially affect the conclusions; and (4) I use the factor space (trace statistic) rather than individual factor estimates for formal evaluation in Essay II, which is rotation-invariant.
+
+\medskip\hrule\medskip
+
+\textbf{Q29. Factor models are often described as "black boxes." How would you convince a skeptical policymaker that the DFM financial cycle indicator is interpretable?}
+
+The factor model is interpretable in two concrete ways. First, the factor loadings $\hat{\lambda}_i$ tell you which variables are most strongly associated with the financial cycle for each country — if $\hat{\lambda}_{house prices}$ is large, the current cycle is primarily a housing cycle. Second, the factor itself can be decomposed into variable contributions at each point in time: $\hat{f}_t = \sum_i \hat{\lambda}_i x_{it} / \|\hat{\lambda}\|^2$ (up to normalization), so the indicator's current level can always be traced back to specific movements in the underlying data. This decomposition is exactly what macroprudential committees need for communication: "the indicator is elevated because credit and house price growth are both running above historical norms." A black-box model that gives a number without a narrative would be rejected by any policy committee. The variable decomposition in Essay III is precisely designed to support that narrative.
+
+\medskip\hrule\medskip
+
+\subsection*{Category 7: Cross-Paper \& Big-Picture Questions}
+
+\medskip\hrule\medskip
+
+\textbf{Q30. Could you combine the three essays into a single model — a nonstationary smooth-transition DFM applied to financial cycle measurement?}
+
+In principle, yes. Such a model would extract I(1) latent financial cycle factors whose loadings shift smoothly between high- and low-stress regimes, with threshold adjustment in the factor dynamics. This is technically feasible but would require combining the estimation procedures from Essays I and II — profiled NLS over transition parameters nested within the sequential least-squares procedure for I(1) factors. The combined model would be quite complex to estimate and would require substantially larger datasets to achieve reliable performance. The three separate essays are, in part, a strategy for making progress incrementally: first establish each extension individually with full theoretical results, then combine. This is standard practice in the econometrics literature (compare the progression from Bai-Ng 2002 to Stock-Watson 2002 to Bai-Wang 2015). I view a combined model as an exciting long-run research agenda, not something missing from the current thesis.
+
+\medskip\hrule\medskip
+
+\textbf{Q31. If you were to do the thesis again, what would you do differently?}
+
+There are three things I would do differently. First, for Essay I, I would establish formal asymptotic distribution theory for the transition parameter estimators, not just consistency — this would allow confidence intervals and would strengthen the paper for top-tier journals. Second, for Essay II, I would invest more in the panel unit root pre-testing problem, either by proposing a test that accounts for the two-level structure or by documenting more carefully the robustness of the I(1) assumption. Third, for Essay III, I would build a real-time vintage database for the financial variables from the start, which would allow a rigorous real-time evaluation of the early-warning properties — the most important robustness concern for a policy indicator.
+
+\medskip\hrule\medskip
+
+\textbf{Q32. What do you see as the most important open question in this research agenda, and what would you work on next?}
+
+The most important open question is asymptotic distribution theory for estimators in nonlinear factor models. Both Essays I and II establish consistency, but confidence intervals for the nonlinear parameters ($\gamma$, $c$, $d$, $\beta$) currently rely on bootstrap procedures. A rigorous asymptotic theory — ideally with explicit convergence rates and limiting distributions — would make these models fully usable for formal hypothesis testing. This is a hard problem because the standard linearization arguments break down at the nonlinear parameters. My next research agenda would pursue three threads: (1) distribution theory for the STFM estimator using recent results on concentrated least squares in factor models; (2) real-time financial cycle monitoring for the ECB/ESRB using the Essay III framework updated with post-2022 data; and (3) extending the two-level threshold VECM to multiple cointegrating vectors, which would allow richer long-run dynamics in applications like global term structure models.
+
+\medskip\hrule\medskip
+
+\textit{Last updated: 2026-06-01}
+
+
+\end{document}

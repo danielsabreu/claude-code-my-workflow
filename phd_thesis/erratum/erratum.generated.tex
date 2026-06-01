@@ -1,0 +1,194 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{parskip}
+\usepackage{amsmath,amssymb,bm}
+\geometry{margin=2.5cm, top=2cm}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue}
+\setlength{\LTcapwidth}{\linewidth}
+\begin{document}
+
+\section*{Erratum — Three Essays on Factor Models}
+
+\textbf{Daniel Abreu, PhD Thesis}  
+\textbf{ISEG – Lisbon School of Economics and Management, Universidade de Lisboa}  
+\textbf{Generated: 2026-06-01}
+
+\medskip\hrule\medskip
+
+\begin{quote}
+\textbf{How to use this document.} Errors are listed by paper and by severity. Fix CRITICAL issues before any submission or final deposit. MAJOR issues affect meaning and should be corrected before the defense copy is printed. MINOR issues (typos, punctuation, duplicates) can be batched and corrected last.
+\end{quote}
+
+\medskip\hrule\medskip
+
+\subsection*{Summary}
+
+\begin{longtable}{p{5cm} p{8cm}}
+\toprule
+\textbf{Category} & \textbf{Count} \\
+\midrule
+\endhead
+\textbf{Total errors} & \textbf{59} \\
+Critical (technical / mathematical) & 6 \\
+Major (grammar / missing words affecting meaning) & 22 \\
+Minor (typo / punctuation / duplicate word / style) & 31 \\
+\bottomrule
+\end{longtable}
+
+
+\textbf{Critical issues at a glance:}
+\begin{itemize}
+\item Issue 6 — $c_t$ vs. $c$: threshold written as time-varying in one equation (Paper 1)
+\item Issue 22 — $\hat{\gamma}$ reported as 0.955 in text, 0.995 in figure caption (Paper 1)
+\item Issue 46 — Pervasiveness condition sums to $m_r$ instead of $N_r$ (Paper 3)
+\item Issue 47 — $\xi$ subscripts conflate factor-dimension and group-index notation (Paper 3)
+\item Issue 50 — SVD dimensions: $\mathbf{V}$ described with wrong dimensions (Paper 3)
+\item Issue 54 — Portuguese editorial comment left in active LaTeX source (Paper 3)
+\end{itemize}
+
+\medskip\hrule\medskip
+
+\subsection*{Paper 1: Smooth Transition Factor Model}
+
+\begin{longtable}{c p{3.2cm} l p{3.8cm} p{3.5cm}}
+\toprule
+\textbf{\#} & \textbf{Location} & \textbf{Type} & \textbf{Found} & \textbf{Correction} \\
+\midrule
+\endhead
+1 & \texttt{Chapters/1introduction.tex}, line 11 & Typo & "the typical converge rate" & "the typical \textbf{convergence} rate" \\
+2 & \texttt{Chapters/1introduction.tex}, line 13 & Grammar & "the need of two distinct sets of factors … in pre and post break subsamples" & "the need \textbf{for} two distinct sets … in pre\textbf{-} and post\textbf{-}break subsamples" (wrong preposition; missing hyphens in compound modifier) \\
+3 & \texttt{Chapters/1introduction.tex}, line 15 & Grammar & "the proposal of linearity test against" & "the proposal of \textbf{a} linearity test against" (missing article) \\
+4 & \texttt{Chapters/1introduction.tex}, line 19 & Grammar & "Although, the nonparametric approach" & "Although the nonparametric approach" (spurious comma after "Although") \\
+5 & \texttt{Chapters/1introduction.tex}, line 21 & Grammar & "section 8 present the empirical application" & "section 8 \textbf{presents} the empirical application" (subject–verb agreement) \\
+\textbf{6} & \texttt{Chapters/2representation.tex}, line 25 & \textbf{CRITICAL — notation} & "values of $s_t$ higher than $c_t$" & "values of $s_t$ higher than $c$" (threshold is a constant $c$, not time-varying $c_t$; the subscript $t$ is incorrect and implies a moving threshold) \\
+7 & \texttt{Chapters/3estimation.tex}, line 23 & Grammar & "A common recommendation in literature" & "A common recommendation in \textbf{the} literature" (missing article) \\
+8 & \texttt{Chapters/3estimation.tex}, line 55 & Grammar & "associated to its largest $r$ eigenvalues" & "associated \textbf{with} its largest $r$ eigenvalues" (wrong preposition) \\
+9 & \texttt{Chapters/3estimation.tex}, line 75 & Grammar & "convergence to a local minima" & "convergence to a local \textbf{minimum}" ("minima" is plural; context needs singular) \\
+10 & \texttt{Chapters/7finalremarks.tex}, line 3 & Grammar & "we follow \textbackslash\{\}citet\{chen2014detecting\} regression-based LM tests to the smooth transition context" & "we \textbf{adapt} \textbackslash\{\}citet\{chen2014detecting\}'s regression-based LM tests to the smooth transition context" (missing possessive; "follow … tests to" is ungrammatical) \\
+11 & \texttt{Chapters/7finalremarks.tex}, line 5 & Missing word & "A smooth transition factor model with provides a good fit" & "A smooth transition factor model with \textbf{three factors} provides a good fit" (number of factors omitted after "with") \\
+12 & \texttt{Chapters/7finalremarks.tex}, line 5 & Grammar & "to contribute empirical analysis and forecasting" & "to contribute \textbf{to} empirical analysis and forecasting" (missing preposition) \\
+13 & \texttt{Chapters/5montecarlo.tex}, line 45 & Notation & In commented block: "$\beta_{f1}=\beta_{e2}=0.8$" & Mismatched subscripts — left side uses index 1, right side uses index 2. Correct to "$\beta_{f2}=\beta_{e2}=0.8$" \\
+14 & \texttt{Chapters/5montecarlo.tex}, line 84 & Grammar & Sentence starting "Let … , the innovations are distributed" & Dangling participle / comma splice. Split into two sentences: "Let … . The innovations are distributed as …" \\
+15 & \texttt{Chapters/5montecarlo.tex}, line 99 & Grammar & "sampled from an uniform distribution" & "sampled from \textbf{a} uniform distribution" (article "a" before consonant sound) \\
+16 & \texttt{Chapters/5montecarlo.tex}, line 122 & Punctuation & "we simulate a linear factor model with $r =2$" (no full stop before equation) & Add full stop: "…with $r=2$." \\
+17 & \texttt{Chapters/5montecarlo.tex}, line 137 & Grammar & "does not seems to be very impactful" & "does not \textbf{seem} to be very impactful" (incorrect verb form after "does not") \\
+18 & \texttt{Chapters/5montecarlo.tex}, line 141 & Missing word & "the power of the test notably higher" & "the power of the test \textbf{is} notably higher" (missing verb) \\
+19 & \texttt{Chapters/6empiricalapplication.tex}, line 7 & Spurious word & "variables with that are available" & "variables \textbf{that} are available" (remove "with") \\
+20 & \texttt{Chapters/6empiricalapplication.tex}, line 11 & Duplicate word & "which has a now a long tradition" & "which \textbf{now has} a long tradition" (duplicate "a"; wrong word order) \\
+21 & \texttt{Chapters/6empiricalapplication.tex}, line 15 & Logical error & "the linear $IC_1$ … suggests $\tilde{r}=6$, which is consistent with the idea that capturing regime-switching dynamics typically requires roughly twice as many linear factors" & The logic is inverted: the \textit{linear} criterion over-counts because it cannot distinguish regime shifts from additional factors. Rephrase: "…$\tilde{r}=6$, consistent with the known result that ignoring regime shifts inflates the estimated number of factors." \\
+\textbf{22} & \texttt{Chapters/6empiricalapplication.tex}, line 21 vs. figure caption & \textbf{CRITICAL — inconsistency} & $\hat{\gamma}=0.955$ in text; $\hat{\gamma}=0.995$ in figure note & One of these is a transcription error. Verify against estimation output and correct both places to the same value. \\
+23 & \texttt{Chapters/6empiricalapplication.tex}, table notes & Notation & Table header abbreviation "Dur. Cons." vs. note "Dur. Goods denotes Durable Consumer Goods" & Inconsistent abbreviation. Choose one form and use it consistently in both header and note. \\
+\bottomrule
+\end{longtable}
+
+
+\medskip\hrule\medskip
+
+\subsection*{Paper 2: Financial Cycle Measurement}
+
+\begin{longtable}{c p{3.2cm} l p{3.8cm} p{3.5cm}}
+\toprule
+\textbf{\#} & \textbf{Location} & \textbf{Type} & \textbf{Found} & \textbf{Correction} \\
+\midrule
+\endhead
+24 & \texttt{1. INTRO.tex}, line 5 & Citation style & Inline citations used as parenthetical: should use \texttt{\textbackslash\{\}citep\{\}} not \texttt{\textbackslash\{\}citet\{\}} & Change \texttt{\textbackslash\{\}citet\{bernanke1999financial\}}, \texttt{\textbackslash\{\}citet\{kiyotaki1997credit\}}, \texttt{\textbackslash\{\}citet\{he2013intermediary\}} to \texttt{\textbackslash\{\}citep\{\}} where not used as grammatical subjects \\
+25 & \texttt{1. INTRO.tex}, line 7 & Duplicate citation & \texttt{\textbackslash\{\}citet\{menden2017dissecting\}} appears twice in same sentence & Remove the duplicate citation key \\
+26 & \texttt{1. INTRO.tex}, line 9 & Wrong word & "useful to informal macroprudential policy" & "useful to \textbf{inform} macroprudential policy" ("informal" → "inform") \\
+27 & \texttt{1. INTRO.tex}, line 9 & Grammar & "the proposed measures exhibits useful" & "the proposed measures \textbf{exhibit} useful" (subject–verb agreement: plural "measures") \\
+28 & \texttt{2. DATA.tex}, line 25 & Duplicate word & "this transformation is more more suitable" & "this transformation is more suitable" (remove duplicate "more") \\
+29 & \texttt{2. DATA.tex}, line 39 & Wrong word & "To avoid conflating low-term movements" & "To avoid conflating \textbf{low-frequency} movements" ("low-term" is not standard) \\
+30 & \texttt{3. METHODOLOGY.tex}, line 33 & Grammar & "a hybrid approach that combine" & "a hybrid approach that \textbf{combines}" (subject–verb agreement) \\
+31 & \texttt{3. METHODOLOGY.tex}, line 96 & Citation note & EM algorithm cited as \textbackslash\{\}citet\{watson1983alternative\} & The standard reference for EM in state-space models is \textbackslash\{\}citet\{shumway1982approach\}; for the general EM it is \textbackslash\{\}citet\{dempster1977maximum\}. Verify the author's intended reference. \\
+32 & \texttt{4. RESULTS.tex}, line 18 & Grammar & "the financial cycle stronger is more closely related to credit" & "the financial cycle \textbf{is more strongly} related to credit" (misplaced modifier) \\
+33 & \texttt{4. RESULTS.tex}, line 81 & Grammar & "have played an significant role" & "have played \textbf{a} significant role" (article "a" before consonant "s") \\
+34 & \texttt{4. RESULTS.tex}, line 92 & Grammar & "neither elevated or subdued" & "neither elevated \textbf{nor} subdued" (correlative conjunction: "neither … nor") \\
+35 & \texttt{4. RESULTS.tex}, line 131 & Duplicate word & "It serves serves as the recommended" & "It \textbf{serves} as the recommended" (remove duplicate) \\
+36 & \texttt{4. RESULTS.tex}, line 133 & Wrong phrase & "the area under the operating receiver curve (AUROC)" & "the area under the \textbf{receiver operating characteristic} curve (AUROC)" (standard terminology; correct order) \\
+37 & \texttt{4. RESULTS.tex}, line 133 & Grammar & "a global measure of accuracy and plot relates" & "a global measure of accuracy and \textbf{plots}" (wrong verb form; "AUROC … plots") \\
+38 & \texttt{4. RESULTS.tex}, line 147 & Duplicate word & "the policymaker is is less averse" & "the policymaker \textbf{is} less averse" (remove duplicate "is") \\
+39 & \texttt{4. RESULTS.tex}, line 147 & Grammar & "we consider balance preferences" & "we consider \textbf{balanced} preferences" ("balance" → "balanced") \\
+\bottomrule
+\end{longtable}
+
+
+\medskip\hrule\medskip
+
+\subsection*{Paper 3: Non-stationary DFM with Threshold Cointegration}
+
+\begin{longtable}{c p{3.2cm} l p{3.8cm} p{3.5cm}}
+\toprule
+\textbf{\#} & \textbf{Location} & \textbf{Type} & \textbf{Found} & \textbf{Correction} \\
+\midrule
+\endhead
+40 & \texttt{main.tex}, line 47 & Grammar & "group r-specific variable" & "group-$r$-specific variable" or rephrase as "the variable $x_{r,it}$ belonging to group $r$" \\
+41 & \texttt{main.tex}, line 61 & Notation inconsistency & RHS of equation: $\boldsymbol{\Lambda}^*\boldsymbol{F}_{r,t}^*$ lacks subscript $r$ on $\boldsymbol{\Lambda}^*$ while $\boldsymbol{\Gamma}_r^*$ retains it & Change to $\boldsymbol{\Lambda}_r^*$ for consistency \\
+42 & \texttt{main.tex}, line 71 & Grammar & "normalisations of the factors space" & "normalisations of the \textbf{factor} space" (remove spurious plural "s") \\
+43 & \texttt{main.tex}, line 71 & Grammar & "used as the principle for the estimation" & "used as the \textbf{criterion} for the estimation" ("principle" → "criterion"; also add "objective function" after "least squares") \\
+44 & \texttt{main.tex}, line 75 & Punctuation & "Since, differencing removes persistent components" & "Since differencing removes persistent components" (remove spurious comma after "Since") \\
+\textbf{45} & \texttt{main.tex}, Assumption 2b & \textbf{CRITICAL — technical} & Pervasiveness condition: $\frac{1}{m_r}\sum_{i=1}^{m_r} \boldsymbol{\gamma}_{r,i}\boldsymbol{\gamma}_{r,i}' \to \boldsymbol{\Sigma}_{\gamma_r}$ & Summation limit should be $N_r$ (number of units in group $r$), not $m_r$ (number of group-specific factors). Change to $\frac{1}{N_r}\sum_{i=1}^{N_r}$ \\
+\textbf{46} & \texttt{main.tex}, Assumption 3c & \textbf{CRITICAL — notation} & $\mathbb{E}(\xi_{m_0,it}\xi_{m_r,jt})$ — subscripts $m_0, m_r$ conflate factor-dimension parameters with unit/group indices & Re-index with group labels: $\mathbb{E}(\xi_{r_1,it}\xi_{r_2,jt})$ or similar; clearly separate the "group" index from the "dimension" parameter \\
+47 & \texttt{main.tex}, line 181 & Grammar & "allows to effectively separate" & "allows \textbf{one} to effectively separate" (or "allows the effective separation of") \\
+48 & \texttt{main.tex}, line 213 & Punctuation & "Stack … $\boldsymbol{x}_{r,t}$ $r=1,...R$" & "Stack … $\boldsymbol{x}_{r,t}$, $r=1,\ldots,R$" (add comma; use \texttt{\textbackslash\{\}ldots}) \\
+\textbf{49} & \texttt{main.tex}, line 217 & \textbf{CRITICAL — technical} & SVD description: "$\boldsymbol{V}$ is $T \times N$" & For $\boldsymbol{X} = \boldsymbol{U}\boldsymbol{S}\boldsymbol{V}'$, $\boldsymbol{V}$ is $N \times N$ (full) or $N \times \min(T,N)$ (thin). The stated dimension "$T \times N$" corresponds to $\boldsymbol{V}'$, not $\boldsymbol{V}$. Correct the dimension statement to match the SVD variant used. \\
+50 & \texttt{main.tex}, line 234 & Grammar & "Let $\boldsymbol{\mathcal{F}}_t$ denote the stacked vector of all group-specific factors $Q=\sum_{r=1}^R m_r$" & Add "where $Q=\sum_{r=1}^R m_r$ is its dimension" (the definition of $Q$ reads as if it equals the vector) \\
+51 & \texttt{main.tex}, line 267 & Grammar & "particularly useful to model asymmetries in the adjustment towards equilibrium" & "particularly useful to model asymmetries in the adjustment \textbf{toward} equilibrium" (choose one spelling and use consistently throughout) \\
+52 & \texttt{main.tex}, line 303 & Notation & In equation: "$\Phi_{2i}$" (no comma between subscripts) & "$\Phi_{2,i}$" (add comma for consistency with $\Phi_{j,i}$ elsewhere) \\
+\textbf{53} & \texttt{main.tex}, line 539 & \textbf{CRITICAL — editorial note left in source} & "Isto pode apagar-se?" & This Portuguese comment ("Can this be deleted?") is inside active LaTeX source. \textbf{Remove before compiling for submission or deposit.} \\
+54 & \texttt{main.tex}, line 421 & Technical & In Remark: "for all $\mathbf{x}, \mathbf{y} \in \mathbb{R}^R$" — dimension is $R$ & The companion matrix dimension is $Qp$, not $R$. Correct to $\mathbb{R}^{Qp}$ to match the definition of $\mathcal{A}_j$ above \\
+\bottomrule
+\end{longtable}
+
+
+\medskip\hrule\medskip
+
+\subsection*{Thesis Introduction and Conclusion}
+
+\begin{longtable}{c p{3.2cm} l p{3.8cm} p{3.5cm}}
+\toprule
+\textbf{\#} & \textbf{Location} & \textbf{Type} & \textbf{Found} & \textbf{Correction} \\
+\midrule
+\endhead
+55 & \texttt{thesis\_intro.tex}, line 17 & Duplicate citation & \texttt{\textbackslash\{\}citep\{su2017time,su2017time\}} — same key cited twice & Remove the duplicate \texttt{su2017time} from the citation list \\
+56 & \texttt{conclusion.tex}, line 5 & Style & "With the advancement of data collection capability" & "With \textbf{advances in data collection}" (more natural phrasing for academic conclusion) \\
+57 & \texttt{conclusion.tex}, line 7 & Style & "often predicted by economic theory and observed in practice" & "often predicted by economic theory and \textbf{frequently} observed in practice" (minor formality improvement) \\
+\bottomrule
+\end{longtable}
+
+
+\medskip\hrule\medskip
+
+\subsection*{Critical Issues — Detail Notes}
+
+\subsubsection*{Issue 6 — Threshold written as $c_t$ instead of $c$ (Paper 1)}
+
+In \texttt{2representation.tex} line 25, the location parameter of the logistic transition function is written as $c_t$ (with a time subscript), but the model defines $c$ as a constant parameter. This is not just a notation inconsistency — it implies the threshold moves over time, which would change the model interpretation entirely. Verify whether this is a typo or an intentional generalisation (if intentional, the estimation section and Monte Carlo must also reflect a time-varying threshold).
+
+\subsubsection*{Issue 22 — $\hat{\gamma}$ discrepancy (Paper 1)}
+
+The estimated smoothness parameter is reported as $\hat{\gamma}=0.955$ in the text (line 21 of \texttt{6empiricalapplication.tex}) and $\hat{\gamma}=0.995$ in the figure caption for the transition function plot. These two numbers differ enough ($\sim4\%$) that one must be a transcription error. Check the estimation output directly and correct both occurrences to the same value.
+
+\subsubsection*{Issue 45 — Pervasiveness condition (Paper 3)}
+
+In Assumption 2(b), the pervasiveness condition on global loadings $\boldsymbol{\gamma}_{r,i}$ sums over $i=1,\ldots,m_r$ (the number of group-specific factors), but the correct index should run over $i=1,\ldots,N_r$ (the number of cross-sectional units in group $r$). The standard pervasiveness condition in factor models (Chamberlain–Rothschild, Bai–Ng) sums over units, not over the factor dimension. This is a technical inaccuracy in the assumption statement.
+
+\subsubsection*{Issue 46 — Conflated notation in Assumption 3 (Paper 3)}
+
+The subscripts $m_0$ (number of global factors) and $m_r$ (number of group-$r$ factors) are used on the idiosyncratic error $\xi$ in Assumption 3(c), making it appear as if the error is indexed by the factor-dimension parameters rather than by the group and unit indices. Re-index with distinct symbols (e.g., $r_1, r_2$ for groups; $i, j$ for units within groups) to eliminate the ambiguity.
+
+\subsubsection*{Issue 49 — SVD dimension mismatch (Paper 3)}
+
+The algorithm description states "$\boldsymbol{V}$ is $T \times N$", but in the standard SVD $\boldsymbol{X} = \boldsymbol{U}\boldsymbol{S}\boldsymbol{V}'$, $\boldsymbol{V}$ is always $N \times K$ (where $K = \min(T,N)$ for thin SVD or $K = N$ for full SVD). The $T \times N$ dimension corresponds to $\boldsymbol{V}'$ (the transpose), not $\boldsymbol{V}$ itself. Confirm which convention is being used and correct the stated dimensions accordingly.
+
+\subsubsection*{Issue 53 — Portuguese editorial comment in source (Paper 3)}
+
+The phrase "Isto pode apagar-se?" (Portuguese: "Can this be deleted?") appears at line 539 of \texttt{main.tex} inside the active LaTeX body, not within a comment. It will appear verbatim in the typeset output. \textbf{This must be removed before the thesis is deposited or printed.}
+
+
+\end{document}

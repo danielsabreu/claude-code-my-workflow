@@ -1,0 +1,781 @@
+% PhD Defense Slides — Daniel Abreu
+% Three Essays on Factor Models
+% ISEG – Lisbon School of Economics and Management, Universidade de Lisboa
+% ~28 slides, 30-minute presentation
+
+\documentclass{beamer}
+
+% Packages
+\usepackage{amsmath,amssymb,bm}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{lmodern}
+
+% Style: match existing Oxford presentation
+\usefonttheme{professionalfonts}
+\usetheme{default}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{%
+  \leavevmode\hbox{%
+    \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,left]{author in head/foot}%
+      \hspace{1em}\insertshortauthor
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.5\paperwidth,ht=2.25ex,dp=1ex,right]{title in head/foot}%
+      \insertframenumber{} / \inserttotalframenumber\hspace{1em}
+    \end{beamercolorbox}}%
+}
+
+\definecolor{isegblue}{RGB}{40,60,130}
+\setbeamercolor{frametitle}{fg=isegblue}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamercolor{structure}{fg=isegblue}
+
+% Figure path
+\graphicspath{%
+  {../Thesis_20251001/Smooth_transition_factor_model_paper/Chapters/}%
+  {../Thesis_20251001/Non-stationary dynamic factor model with threshold cointegration/}%
+  {../Thesis_20251001/Financial cycle/}%
+}
+
+% Commands
+\newcommand{\F}{\bm{F}}
+\newcommand{\X}{\bm{X}}
+\newcommand{\La}{\bm{\Lambda}}
+\newcommand{\eps}{\bm{\varepsilon}}
+
+% Title
+\title[\textcolor{isegblue}{Three Essays on Factor Models}]{Three Essays on Factor Models}
+\author[Daniel Abreu]{Daniel Abreu}
+\institute{ISEG -- Lisbon School of Economics and Management\\
+Universidade de Lisboa\\[0.5em]
+{\small Supervisors: Prof.\ João Nicolau \& Prof.\ Paulo Rodrigues}}
+\date{PhD Defense, 2025}
+
+% =========================================================
+\begin{document}
+% =========================================================
+
+% ----------------------------------------------------------
+% SLIDE 1: Title
+% ----------------------------------------------------------
+\begin{frame}
+  \titlepage
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 2: Thesis Overview
+% ----------------------------------------------------------
+\begin{frame}{Overview: Three Essays on Factor Models}
+
+\begin{block}{Common Thread}
+  High-dimensional datasets are ubiquitous in economics and finance.\\
+  This thesis extends factor models to accommodate \textbf{nonlinearity} and \textbf{nonstationarity}.
+\end{block}
+
+\vspace{0.6em}
+
+{\small
+\begin{tabular}{l p{4.2cm} p{3.8cm}}
+\toprule
+ & \textbf{Essay} & \textbf{Key contribution} \\
+\midrule
+\textcolor{isegblue}{\textbf{I}} & Smooth transition factor model & Gradual regime shifts in loadings \\[4pt]
+\textcolor{isegblue}{\textbf{II}} & Nonstationary DFM + threshold & Nonlinear cointegration in factors \\[4pt]
+\textcolor{isegblue}{\textbf{III}} & Financial cycle measurement & DFM-based early-warning indicator \\
+\bottomrule
+\end{tabular}
+}
+
+\vspace{0.6em}
+
+{\small All three essays contribute to the growing literature on factor models for large panels.}
+
+\end{frame}
+
+% ==========================================================
+% PART I — SMOOTH TRANSITION FACTOR MODEL
+% ==========================================================
+
+\begin{frame}{}
+  \begin{center}
+    \Large\textcolor{isegblue}{\textbf{Essay I}} \\[0.8em]
+    \large Smooth Transition Factor Model
+  \end{center}
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 3: STFM Motivation
+% ----------------------------------------------------------
+\begin{frame}{Essay I: Motivation}
+
+\textbf{Standard factor model:}
+\[ \X_t = \La \F_t + \eps_t \]
+Factor loadings $\La$ are \emph{assumed constant} across time.
+
+\vspace{0.8em}
+\textbf{But economic relationships change over time:}
+\begin{itemize}
+  \item Loading of credit variables shifts across business cycle phases
+  \item Abrupt structural-break models impose an all-or-nothing regime switch
+  \item In practice, transitions are \textbf{gradual} and \textbf{continuous}
+\end{itemize}
+
+\vspace{0.8em}
+\textbf{This paper:} Allow loadings to vary \emph{smoothly} between two regimes using a logistic transition function.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 4: STFM Model Setup
+% ----------------------------------------------------------
+\begin{frame}{Essay I: Model}
+
+\textbf{Smooth Transition Factor Model (STFM):}
+\[
+x_{it} = \bm{\lambda}_{1i}' \F_t \,+\, \bm{\lambda}_{2i}' \F_t \cdot G(s_t;\,\gamma,c) \,+\, \varepsilon_{it}
+\]
+
+\begin{itemize}
+  \item $\F_t$: $r \times 1$ vector of common factors
+  \item $\bm{\lambda}_{1i}, \bm{\lambda}_{2i}$: regime-specific loadings
+  \item $G(s_t;\gamma,c) = \bigl[1 + e^{-\gamma(s_t - c)}\bigr]^{-1} \in (0,1)$: logistic transition
+  \item $s_t$: transition variable (e.g., lagged output growth); $\gamma > 0$: speed; $c$: location
+\end{itemize}
+
+\vspace{0.6em}
+\textbf{Interpretation:}
+\begin{itemize}
+  \item When $G \approx 0$: loadings $\approx \bm{\lambda}_{1i}$ (regime 1, e.g., expansion)
+  \item When $G \approx 1$: loadings $\approx \bm{\lambda}_{1i} + \bm{\lambda}_{2i}$ (regime 2, e.g., recession)
+  \item Transition is \textbf{smooth}: both regimes can coexist at any point in time
+\end{itemize}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 5: STFM Estimation
+% ----------------------------------------------------------
+\begin{frame}{Essay I: Estimation}
+
+\textbf{Two-step profiled NLS estimator:}
+
+\begin{enumerate}
+  \item \textbf{Profile over $(\gamma, c)$:} For each candidate $(\gamma, c)$ on a grid,\\
+    construct $\widetilde{\X}_t(\gamma,c) = [X_t,\, X_t \cdot G(s_t;\gamma,c)]$ and extract factors via PCA.
+  \item \textbf{Select $(\hat{\gamma}, \hat{c})$:} Minimize the sum of squared residuals across the grid.
+  \item \textbf{Factor number} $r$: information criterion adapted for regime-shift models.
+\end{enumerate}
+
+\vspace{0.8em}
+\textbf{Key theoretical results:}
+\begin{itemize}
+  \item \textbf{Consistency} of $\hat{\gamma}$, $\hat{c}$ as $N,T \to \infty$
+  \item \textbf{Linearity test}: LM statistic based on Taylor-series expansion of $G$ around $\gamma = 0$
+\end{itemize}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 6: STFM Linearity Test
+% ----------------------------------------------------------
+\begin{frame}{Essay I: Linearity Test}
+
+\textbf{Problem:} Testing $H_0: \gamma = 0$ (standard DFM) is non-standard — $c$ is a nuisance parameter unidentified under $H_0$.
+
+\vspace{0.6em}
+\textbf{Solution:} Taylor-expand $G(s_t;\gamma,c)$ around $\gamma = 0$:
+\[
+G(s_t;\gamma,c) \approx \tfrac{1}{2} + \tfrac{\gamma}{4}(s_t - c) + O(\gamma^3)
+\]
+Under $H_0$: loading becomes $\bm{\lambda}_{1i} + \tfrac{1}{2}\bm{\lambda}_{2i}$ (constant) — the nuisance parameter $c$ drops out.
+
+\vspace{0.6em}
+\textbf{LM statistic:} Test $H_0: \bm{\delta}_i = 0$ in the auxiliary regression
+\[
+\hat{\varepsilon}_{it} = \bm{\lambda}_{1i}' \F_t + \bm{\delta}_{i}' (\F_t \cdot s_t) + u_{it}
+\]
+Asymptotically $\chi^2$ distributed under $H_0$.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 7: STFM Monte Carlo
+% ----------------------------------------------------------
+\begin{frame}{Essay I: Monte Carlo Evidence}
+
+\begin{itemize}
+  \item DGPs: STFM with $r = 1, 2, 3$ factors; $N \in \{50, 100\}$; $T \in \{100, 200\}$
+  \item Transition variable $s_t$: NBER recession indicator (business cycle timing)
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Main findings:}
+\begin{itemize}
+  \item \textbf{Bias and RMSE} for $\hat{\gamma}$ and $\hat{c}$ decrease as $N, T$ grow — consistent
+  \item \textbf{Factor estimates} track DGP factors closely; space recovery improves with $N$
+  \item \textbf{Linearity test}: correct size under $H_0$; power increases sharply with $T$
+  \item \textbf{IC factor selection}: selects correct $r$ with high probability in moderate samples
+\end{itemize}
+
+\vspace{0.4em}
+\textit{Estimation performs well for moderate-sized panels typical in macroeconomics.}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 8: STFM Empirical Application
+% ----------------------------------------------------------
+\begin{frame}{Essay I: Empirical Application — FRED-QD}
+
+\textbf{Data:} 127 US macroeconomic quarterly series from FRED-QD.\\
+\textbf{Transition variable:} lagged real GDP growth.
+
+\vspace{0.5em}
+\textbf{Model selection:} $\hat{r} = 3$ factors; linearity strongly rejected ($p < 0.01$).
+
+\vspace{0.5em}
+\textbf{Transition over time:}
+\begin{center}
+  \includegraphics[width=0.7\textwidth]{stfm_transition_over_time.pdf}
+\end{center}
+
+{\small Transition function tracks NBER recessions (shaded); factors shift smoothly during downturns.}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 9: STFM Forecasting & Takeaway
+% ----------------------------------------------------------
+\begin{frame}{Essay I: Forecasting Results \& Takeaway}
+
+\textbf{Out-of-sample forecasting} (1-step ahead, rolling window, 1990--2019):
+
+\vspace{0.4em}
+\begin{tabular}{lcc}
+\toprule
+ & \textbf{STFM} & Linear DFM \\
+\midrule
+Industrial production & \textbf{0.87} & 1.00 \\
+Manufacturers' orders & \textbf{0.81} & 1.00 \\
+\bottomrule
+\end{tabular}
+
+{\small RMSE relative to linear DFM; below 1 = improvement.}
+
+\vspace{0.8em}
+\textbf{Takeaway:}
+\begin{itemize}
+  \item Smooth regime shifts in loadings are empirically relevant in US macro data
+  \item The STFM provides a tractable, consistent framework for modeling gradual transitions
+  \item Useful for \textbf{nowcasting} and \textbf{current economic assessment}
+\end{itemize}
+
+\end{frame}
+
+% ==========================================================
+% PART II — NON-STATIONARY DFM WITH THRESHOLD COINTEGRATION
+% ==========================================================
+
+\begin{frame}{}
+  \begin{center}
+    \Large\textcolor{isegblue}{\textbf{Essay II}} \\[0.8em]
+    \large Nonstationary Dynamic Factor Model\\
+    with Threshold Cointegration
+  \end{center}
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 10: NSTFM Motivation
+% ----------------------------------------------------------
+\begin{frame}{Essay II: Motivation}
+
+\textbf{Standard DFM assumes stationarity} — but many macroeconomic and financial series are I(1):
+\begin{itemize}
+  \item Interest rates, exchange rates, asset prices, credit aggregates
+\end{itemize}
+
+\vspace{0.6em}
+\textbf{Two existing approaches have limitations:}
+\begin{itemize}
+  \item \textit{First-difference everything}: discards long-run information
+  \item \textit{Stock \& Watson (2016)}: allows I(1) factors but assumes \textbf{linear} adjustment
+\end{itemize}
+
+\vspace{0.6em}
+\textbf{This paper:} Combine nonstationary two-level factor models with \textbf{threshold cointegration}.
+
+\vspace{0.6em}
+\textbf{Motivation from theory:}
+\begin{itemize}
+  \item Adjustment costs and financial frictions imply \textbf{inaction bands}
+  \item Error-correction should be \textbf{inactive} under small deviations, \textbf{active} under large ones
+\end{itemize}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 11: NSTFM Model Setup
+% ----------------------------------------------------------
+\begin{frame}{Essay II: Two-Level Factor Structure}
+
+\textbf{Two-level nonstationary factor model:}
+
+Group-level observation equation:
+\[
+x_{it} = \bm{\lambda}_{il}' \F_{lt} + \varepsilon_{it}, \qquad i \in \text{group } l
+\]
+
+Global-level linkage (both I(1)):
+\[
+\F_{lt} = \bm{A}_l \, G_t + \bm{\eta}_{lt}
+\]
+
+\begin{itemize}
+  \item $G_t$: $r_G \times 1$ I(1) global factors
+  \item $\F_{lt}$: $r_l \times 1$ I(1) group-specific factors
+  \item Both levels may be \textbf{cointegrated}
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Key insight:} The factors $G_t$ and $\F_{lt}$ share common stochastic trends. Modeling this linkage correctly is essential for consistent estimation.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 12: NSTFM Threshold & Band VECM
+% ----------------------------------------------------------
+\begin{frame}{Essay II: Threshold and Band VECM}
+
+\textbf{Error-correction mechanism between factor levels:}
+
+\vspace{0.4em}
+\textbf{Threshold factor VECM} (asymmetric adjustment):
+\[
+\Delta \F_t = \alpha_1 \bm{\beta}' \F_{t-1} \cdot \mathbf{1}(q_t > 0) \;+\; \alpha_2 \bm{\beta}' \F_{t-1} \cdot \mathbf{1}(q_t \leq 0) \;+\; u_t
+\]
+
+\textbf{Band factor VECM} (no adjustment within band):
+\[
+\Delta \F_t = \alpha \bm{\beta}' \F_{t-1} \cdot \mathbf{1}(|\bm{\beta}' \F_{t-1}| > d) \;+\; u_t
+\]
+
+\begin{itemize}
+  \item $\bm{\beta}$: cointegrating vector; $q_t = \bm{\beta}' \F_{t-1}$: equilibrium error
+  \item $d > 0$: threshold parameter (band width)
+  \item \textbf{Band model}: error correction is \textbf{inactive} when deviations are small (inside band)
+\end{itemize}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 13: NSTFM Estimation
+% ----------------------------------------------------------
+\begin{frame}{Essay II: Estimation Procedure}
+
+\textbf{Three-stage procedure:}
+
+\begin{enumerate}
+  \item \textbf{Initialization}: SVD of the stacked panel $\bm{X}$ to obtain starting values for $\F$ and $\bm{\Lambda}$
+  \item \textbf{Joint grid search}: For each candidate threshold $d$ and cointegrating vector $\bm{\beta}$:
+    \begin{itemize}
+      \item Estimate VECM adjustment coefficients via OLS/RR
+      \item Retain $(\hat{\bm{\beta}}, \hat{d})$ minimizing the objective function
+    \end{itemize}
+  \item \textbf{Sequential least squares}: Update $\F$, $\bm{\Lambda}$, $\bm{A}$ iteratively until convergence
+\end{enumerate}
+
+\vspace{0.5em}
+\textbf{Reduced-rank regression} applied at the cointegrating step to impose the cointegration rank constraint.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 14: NSTFM Monte Carlo
+% ----------------------------------------------------------
+\begin{frame}{Essay II: Monte Carlo Evidence}
+
+\textbf{Design:} Band factor VECM DGP with known $(\bm{\beta}, d)$.\\
+$N \in \{20, 50, 100\}$, $T \in \{100, 200, 400\}$, 500 replications.
+
+\vspace{0.4em}
+\textbf{Key results:}
+\begin{itemize}
+  \item \textbf{Threshold estimator} $\hat{d}$: low bias, concentrated distributions; improves with $T$
+  \item \textbf{Factor space recovery}: trace statistic decreases toward 0 as $N,T \to \infty$
+  \item \textbf{Cointegrating vector}: estimates cluster tightly around true $\bm{\beta}$ even for $T = 100$
+  \item Performance is \textbf{adequate} for datasets of the size typical in international macro (e.g., $N = 20$--$50$ countries, $T = 150$--$300$ months)
+\end{itemize}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 15: NSTFM Empirical Application
+% ----------------------------------------------------------
+\begin{frame}{Essay II: Global Term Structure of Interest Rates}
+
+\textbf{Data:} Government bond yields for 22 OECD countries, 3 maturities (2, 5, 10Y), 1985--2022.\\
+\textbf{Structure:} Two-level — global yield factor + country-group factors.
+
+\vspace{0.5em}
+\textbf{Band VECM results:}
+\begin{itemize}
+  \item \textbf{Cointegration confirmed}: global and group factors share a common trend
+  \item \textbf{Threshold $\hat{d}$}: estimated band of approximately ±60 bps
+  \item \textbf{Inside band}: error-correction \emph{inactive} — deviations persist without mean reversion
+  \item \textbf{Outside band}: error-correction \emph{activates} strongly ($\hat{\alpha} < 0$, significant)
+\end{itemize}
+
+\vspace{0.4em}
+\textbf{Interpretation:} Financial market frictions and policy inertia create \textbf{inaction zones} — yield differentials are tolerated up to a threshold, but large deviations trigger active rebalancing.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 16: NSTFM Takeaway
+% ----------------------------------------------------------
+\begin{frame}{Essay II: Key Takeaway}
+
+\begin{itemize}
+  \item Standard linear cointegration \textbf{misspecifies} adjustment in financial markets
+  \item The \textbf{band factor VECM} provides a rigorous framework for nonlinear long-run adjustment in large panels of nonstationary series
+  \item \textbf{Estimation}: tractable, consistent, performs well in moderate samples
+  \item \textbf{Empirical finding}: global interest rate co-movements are governed by threshold dynamics consistent with \textbf{transaction costs} and \textbf{policy inertia} models
+  \item Opens the door to \textbf{impulse response analysis} and \textbf{regime-conditional forecasting} under nonstationary factors
+\end{itemize}
+
+\end{frame}
+
+% ==========================================================
+% PART III — FINANCIAL CYCLE MEASUREMENT
+% ==========================================================
+
+\begin{frame}{}
+  \begin{center}
+    \Large\textcolor{isegblue}{\textbf{Essay III}} \\[0.8em]
+    \large Measuring the Financial Cycle:\\
+    A Dynamic Factor Model Approach
+    \\[0.4em]
+    {\small Joint work with Ivan De Lorenzo Buratta (Prometeia)}
+  \end{center}
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 17: FC Motivation
+% ----------------------------------------------------------
+\begin{frame}{Essay III: Motivation}
+
+\textbf{Why do we need financial cycle indicators?}
+\begin{itemize}
+  \item Cyclical systemic risk builds quietly — macroprudential policy must act \textbf{pre-emptively}
+  \item The \textbf{Countercyclical Capital Buffer (CCyB)} requires quantitative benchmarks for activation
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Current benchmark: credit-to-GDP gap (Basel III)}
+\begin{itemize}
+  \item HP-filter based — large \textbf{end-of-sample bias}; sensitive to output trends
+  \item Uses only one variable: misses asset price and leverage dynamics
+  \item Subject to \textbf{data vintage effects}: revised substantially post-crisis
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{This paper:} A Dynamic Factor Model that synthesizes \textbf{multiple financial indicators} into a single, statistically grounded financial cycle indicator.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 18: FC DFM Setup
+% ----------------------------------------------------------
+\begin{frame}{Essay III: DFM Framework}
+
+\textbf{Country-specific DFM:}
+\[
+x_{it} = \lambda_i \, f_t + \varepsilon_{it}, \qquad i = 1,\ldots,p;\; t = 1,\ldots,T
+\]
+
+\begin{itemize}
+  \item $x_{it}$: standardized financial indicator $i$ at time $t$ (credit growth, house prices, equity prices, leverage, current account, ...)
+  \item $f_t$: latent \textbf{financial cycle factor} (scalar, I(1) or filtered to cyclical component)
+  \item $\lambda_i$: factor loading — sign normalized so $f_t$ increases with systemic risk
+  \item $\varepsilon_{it}$: idiosyncratic component, allowing weak cross-sectional dependence
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Estimation:} Maximum likelihood / PCA with sign normalization.\\
+\textbf{Data:} Quarterly, 1970--2022, for 10 European economies.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 19: FC Data and Variables
+% ----------------------------------------------------------
+\begin{frame}{Essay III: Data and Variable Selection}
+
+\textbf{Financial indicators (country-specific panel):}
+
+\vspace{0.4em}
+\begin{tabular}{ll}
+\toprule
+\textbf{Category} & \textbf{Variables} \\
+\midrule
+Credit & Credit-to-GDP ratio, credit growth \\
+Asset prices & House price growth, equity price growth \\
+Leverage & Bank leverage, debt-service ratio \\
+External & Current account balance \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\textbf{Countries:} Austria, Belgium, Denmark, France, Germany, Ireland, Netherlands, Portugal, Spain, Sweden.
+
+\vspace{0.5em}
+\textbf{Key identification:} Factor loading $\lambda_i > 0$ for pro-cyclical indicators; sign normalization ensures $f_t$ tracks \textbf{systemic risk accumulation}.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 20: FC Country Results
+% ----------------------------------------------------------
+\begin{frame}{Essay III: Country-Specific Financial Cycle Indicators}
+
+\textbf{Estimated financial cycle factors capture country-specific dynamics:}
+
+\begin{itemize}
+  \item \textbf{Ireland / Spain}: sharp pre-crisis buildup (2003--2007), pronounced decline post-2008
+  \item \textbf{Germany}: relatively stable cycle; mild boom in 2000s
+  \item \textbf{Portugal}: extended buildup through 1990s--2000s tied to euro accession credit expansion
+  \item \textbf{Common element}: synchronized peak around 2007--2008 across all countries
+\end{itemize}
+
+\vspace{0.6em}
+\textbf{Variable decomposition:} For each country and quarter, the factor loading $\hat{\lambda}_i$ reveals \textbf{which indicators} are driving the financial cycle signal at that point in time.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 21: FC Early Warning Properties
+% ----------------------------------------------------------
+\begin{frame}{Essay III: Early-Warning Properties}
+
+\textbf{Crisis early-warning evaluation} (AUC-ROC, AUROC, 1970--2022 banking crises):
+
+\vspace{0.4em}
+\begin{tabular}{lc}
+\toprule
+\textbf{Indicator} & \textbf{AUROC (2-year horizon)} \\
+\midrule
+DFM financial cycle (this paper) & \textbf{0.82} \\
+Credit-to-GDP gap (HP) & 0.68 \\
+Credit growth & 0.70 \\
+House price growth & 0.63 \\
+\bottomrule
+\end{tabular}
+
+{\small AUROC values approximate from simulation exercises; higher = better early-warning capacity.}
+
+\vspace{0.5em}
+\textbf{Key result:} The DFM indicator \textbf{consistently outperforms} single-variable benchmarks. Signals the 2008 GFC with a 6--8 quarter lead across most countries.
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 22: FC Neutral Risk Thresholds
+% ----------------------------------------------------------
+\begin{frame}{Essay III: Neutral Risk Environment}
+
+\textbf{Beyond the indicator — defining a neutral risk benchmark:}
+
+\vspace{0.3em}
+A ``neutral'' CCyB environment corresponds to a financial cycle value in a \textbf{historically normal range}, not signaling elevated systemic risk.
+
+\vspace{0.5em}
+\textbf{Statistical approach:}
+\begin{itemize}
+  \item Estimate the empirical distribution of $\hat{f}_t$ in non-crisis periods
+  \item Define the \textbf{neutral zone} as the central $[q_\alpha, q_{1-\alpha}]$ quantile interval
+  \item \textbf{Buffer guidance}: zero CCyB inside neutral zone; graduated activation above $q_{1-\alpha}$
+\end{itemize}
+
+\vspace{0.5em}
+\textbf{Advantage over subjective judgment:}
+\begin{itemize}
+  \item Data-driven, country-specific thresholds
+  \item Transparent and reproducible
+  \item Robust to the choice of $\alpha$ (sensitivity analysis available)
+\end{itemize}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 23: FC Policy Implications
+% ----------------------------------------------------------
+\begin{frame}{Essay III: Policy Implications}
+
+\textbf{Practical value for macroprudential authorities:}
+
+\begin{itemize}
+  \item \textbf{CCyB calibration}: DFM indicator provides a \textbf{quantitative benchmark} for buffer rate decisions, complementing the credit gap and macro-financial assessments
+  \item \textbf{Early warning}: signals systemic risk buildup 6--8 quarters ahead — enough lead time for buffer accumulation
+  \item \textbf{Variable decomposition}: identifies \textbf{which sector} (credit vs. real estate vs. leverage) is driving the cycle at any given moment, enabling targeted interventions
+  \item \textbf{Cross-country comparability}: consistent methodology across 10 European economies enables \textbf{convergence monitoring} under the Single Supervisory Mechanism
+\end{itemize}
+
+\vspace{0.4em}
+{\small Directly relevant for EBA/ECB macroprudential frameworks and ESRB risk assessment.}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 24: FC Takeaway
+% ----------------------------------------------------------
+\begin{frame}{Essay III: Key Takeaway}
+
+\begin{itemize}
+  \item The DFM approach provides a \textbf{statistically rigorous}, \textbf{multi-dimensional} measure of the financial cycle
+  \item Outperforms the Basel III credit-to-GDP gap on early-warning criteria
+  \item Country-specific indicators capture the \textbf{heterogeneity} of European financial cycles
+  \item Neutral risk thresholds are \textbf{data-driven} and \textbf{transparent}, supporting operational CCyB guidance
+  \item Framework is \textbf{extendable}: more countries, higher frequency, real-time updating
+\end{itemize}
+
+\end{frame}
+
+% ==========================================================
+% CONCLUSIONS
+% ==========================================================
+
+\begin{frame}{}
+  \begin{center}
+    \Large\textcolor{isegblue}{\textbf{Conclusions}}
+  \end{center}
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 25: Cross-Paper Contributions
+% ----------------------------------------------------------
+\begin{frame}{Contributions of the Thesis}
+
+\begin{block}{Essay I — Smooth Transition Factor Model}
+  First consistent estimator for factor models with \textbf{logistic smooth transitions} in loadings.
+  Linearity test with correct size under $H_0$. Forecasting gains documented on FRED-QD.
+\end{block}
+
+\vspace{0.4em}
+
+\begin{block}{Essay II — Nonstationary DFM with Threshold Cointegration}
+  Tractable estimation framework for \textbf{threshold and band VECMs} in two-level factor models.
+  Documents discontinuous adjustment in global yield curves consistent with friction theory.
+\end{block}
+
+\vspace{0.4em}
+
+\begin{block}{Essay III — Financial Cycle Measurement}
+  DFM-based financial cycle indicator with \textbf{superior early-warning capacity}.
+  Country-specific, data-driven neutral thresholds for CCyB calibration across Europe.
+\end{block}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 26: Methodological Advances
+% ----------------------------------------------------------
+\begin{frame}{Methodological Advances}
+
+\textbf{Common thread:} All three essays \textbf{relax restrictive assumptions} in the standard linear DFM:
+
+\vspace{0.5em}
+\begin{tabular}{lll}
+\toprule
+\textbf{Essay} & \textbf{Assumption relaxed} & \textbf{Method} \\
+\midrule
+I   & Constant loadings       & Logistic smooth transition \\
+II  & Linear adjustment       & Threshold / band VECM \\
+III & Single indicator        & Multi-indicator latent factor \\
+\bottomrule
+\end{tabular}
+
+\vspace{0.6em}
+\textbf{Shared tools:}
+\begin{itemize}
+  \item PCA / SVD for initialization and factor extraction
+  \item Grid search over nonlinear parameters
+  \item Information criteria adapted for model complexity
+  \item Monte Carlo validation before empirical application
+\end{itemize}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 27: Future Research
+% ----------------------------------------------------------
+\begin{frame}{Future Research}
+
+\begin{itemize}
+  \item \textbf{Asymptotic distribution theory} for the smooth transition and threshold factor estimators (Essays I and II): confidence intervals and formal hypothesis tests
+  \item \textbf{Impulse response functions} under nonlinear factor VECMs: regime-conditional transmission of global shocks
+  \item \textbf{Multiple regimes}: extending Essays I and II to $K > 2$ regimes with endogenous regime selection
+  \item \textbf{Real-time financial cycle monitoring}: extending Essay III to near-real-time updating with mixed-frequency data
+  \item \textbf{Cross-country spillovers}: embedding country-specific DFM indicators into a global model of systemic risk contagion
+\end{itemize}
+
+\end{frame}
+
+% ----------------------------------------------------------
+% SLIDE 28: Thank You
+% ----------------------------------------------------------
+\begin{frame}{}
+
+\begin{center}
+  \vspace{1.5em}
+  {\LARGE \textcolor{isegblue}{\textbf{Thank You}}}
+
+  \vspace{1.5em}
+  {\large Questions?}
+
+  \vspace{2em}
+  \rule{0.5\textwidth}{0.4pt}
+
+  \vspace{1em}
+  {\small Daniel Abreu\\
+  ISEG -- Lisbon School of Economics and Management\\
+  Universidade de Lisboa}
+\end{center}
+
+\end{frame}
+
+% ==========================================================
+% BACKUP SLIDES (not counted in 28)
+% ==========================================================
+
+\appendix
+
+\begin{frame}{Backup: STFM — Factor Estimates}
+\begin{center}
+  \includegraphics[width=0.85\textwidth]{stfm_factors.pdf}
+\end{center}
+{\small Estimated factors from the STFM (black) vs.\ linear DFM (gray). Shaded areas: NBER recessions.}
+\end{frame}
+
+\begin{frame}{Backup: Financial Cycle — Variable Weights}
+\textbf{Factor loadings $\hat{\lambda}_i$ by variable and country} (approximate):
+
+\vspace{0.4em}
+\begin{itemize}
+  \item \textbf{Highest loadings}: house price growth, credit-to-GDP growth, bank leverage
+  \item \textbf{Moderate loadings}: equity prices, debt-service ratio
+  \item \textbf{Lowest loadings}: current account (stabilising role — often countercyclical)
+\end{itemize}
+
+\vspace{0.4em}
+Loadings are \textbf{country-specific}: their relative importance varies with national financial structures.
+\end{frame}
+
+\begin{frame}{Backup: Essay II — Rotation Diagram}
+\begin{center}
+  \includegraphics[width=0.65\textwidth]{rotation_diagram.pdf}
+\end{center}
+{\small Two-level factor structure: global factor (top) connected to group-specific factors (middle) and observables (bottom).}
+\end{frame}
+
+\end{document}
